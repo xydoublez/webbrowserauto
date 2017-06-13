@@ -10,6 +10,10 @@ namespace FillTheForm
 {
     public partial class FillFormDemo : Form
     {
+        string userName = System.Configuration.ConfigurationManager.AppSettings["userName"];
+        string password = System.Configuration.ConfigurationManager.AppSettings["password"];
+        string LoginUrl = System.Configuration.ConfigurationManager.AppSettings["LoginUrl"];
+        string FeePriceUrl = System.Configuration.ConfigurationManager.AppSettings["FeePriceUrl"];
         public FillFormDemo()
         {
             InitializeComponent();
@@ -22,22 +26,48 @@ namespace FillTheForm
 
         private void button1_Click(object sender, EventArgs e)
         {
-          
-            this.wb.Navigate("http://oa.msunsoft.com:8088/quexian/web/login.aspx");
-            count = 1;
+            this.wb.Navigate(LoginUrl);
         }
 
         private void wb_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            //判定页面，并处理自动化
-            if(this.wb.Document.Url.LocalPath == "/quexian/web/login.aspx")
+            //登陆界面处理　
+            if(this.wb.Document.Url.LocalPath.IndexOf("login.do")>-1)
             {
                 AutoLogin(this.wb.Document);
             }
-            //判定基他页面，并处理自动化
-           //添加其他业务逻辑
+            //门诊医生开方界面
+            if (this.wb.Document.Url.LocalPath.IndexOf("feeprice.jsp") > -1)
+            {
+
+            }
+           
 
 
+        }
+        //自动处理门诊医生开方界面
+        private void AutoFeePrice(HtmlDocument doc)
+        {
+            //unieap.byId("queryCodeTxt").setValue("test")
+            var script = @" function zyAutoFeePrice(jsonInfo){
+　　　　　　　　　　　　　　　　var feeChargePriceJson = eval('('+jsonInfo+')');
+                                setTimeout(function(){
+                                   unieap.byId('queryCodeTxt').setValue(feeChargePriceJson.queryCodeTxt);
+                                   unieap.byId('queryCodeTxt').setValue(feeChargePriceJson.queryCodeTxt);
+                                 },100);
+                               }
+";
+            InstallScript(script);
+
+            ////正式查询数据库给feePriceInfo
+            //FeePriceInfo feePriceInfo = new FeePriceInfo();
+            ////身份证号
+            //feePriceInfo.queryCodeTxt = "37148290000000";
+            ////其他字段．．．．
+            //string feeChargePriceJson = Newtonsoft.Json.JsonConvert.SerializeObject(feePriceInfo);
+            //测试用
+            string feeChargePriceJson = System.IO.File.ReadAllText("data.json");
+            var r = this.wb.Document.InvokeScript("zyAutoFeePrice", new object[] { feeChargePriceJson });
         }
         /// <summary>
         /// 自动登录
@@ -45,36 +75,18 @@ namespace FillTheForm
         /// <param name="doc"></param>
         private void AutoLogin(HtmlDocument doc)
         {
-            var script = @" function myFunc(name,pass){
+            var script = @" function zyLogin(name,pass){
                                 setTimeout(function(){
-       	                         username.value = name;
-                                 password.value = pass;
-                                 //alert(name);
-                                 $('#password').parent().parent().next().find('a')[0].click();
-                                 // alert($('#password').val());
-                                 // loginCheck();
+                                     document.getElementsByName('j_username')[0].value=name;
+                                     document.getElementsByName('j_password')[0].value=pass;
+                                     document.getElementsByName('loginButton')[0].click();
                                  },100);
                                }
 ";
             InstallScript(script);
-            var r = this.wb.Document.InvokeScript("myFunc", new object[] { this.v1.Text, this.v2.Text });
-        }
-        static int count = 0;
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            //if (count == 1) {
-            //    //this.wb.Document.GetElementById("username").SetAttribute("value", this.v1.Text);
-            //    this.wb.Document.GetElementById("password").SetAttribute("value", this.v2.Text);
-            //    //点击登录按扭
-            //    //this.wb.Document.GetElementById("password").Parent.Parent.NextSibling.Children[0].Children[0].InvokeMember("click");
-                
-            //    count += 1;
-            //}
-        
-            //if (count > 3)
-            //{
-            //    this.timer1.Stop();
-            //}
+            var r = this.wb.Document.InvokeScript("zyLogin", new object[] { userName, password });
+            //登陆成功后打开门诊医生开方界面
+            this.wb.Navigate(FeePriceUrl);
         }
         //添加脚本
         private void InstallScript(string code)

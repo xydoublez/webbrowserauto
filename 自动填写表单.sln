@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FillTheForm", "FillTheForm\FillTheForm.csproj", "{CC1C5AE0-80B6-4799-B6C5-04EC0EFF1CDB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestFillTheForm", "TestFillTheForm\TestFillTheForm.csproj", "{A38D1A10-A119-41D2-9A85-93D7BF837FC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +15,6 @@ Global
 		{CC1C5AE0-80B6-4799-B6C5-04EC0EFF1CDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC1C5AE0-80B6-4799-B6C5-04EC0EFF1CDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC1C5AE0-80B6-4799-B6C5-04EC0EFF1CDB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A38D1A10-A119-41D2-9A85-93D7BF837FC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A38D1A10-A119-41D2-9A85-93D7BF837FC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A38D1A10-A119-41D2-9A85-93D7BF837FC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A38D1A10-A119-41D2-9A85-93D7BF837FC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
