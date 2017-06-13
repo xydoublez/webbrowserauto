@@ -29,13 +29,15 @@ namespace FillTheForm
 
         private void wb_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
+            //判定页面，并处理自动化
             if(this.wb.Document.Url.LocalPath == "/quexian/web/login.aspx")
             {
                 AutoLogin(this.wb.Document);
             }
-            
-       
-            
+            //判定基他页面，并处理自动化
+           //添加其他业务逻辑
+
+
         }
         /// <summary>
         /// 自动登录
