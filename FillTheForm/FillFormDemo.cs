@@ -48,9 +48,9 @@ namespace FillTheForm
        	                         username.value = name;
                                  password.value = pass;
                                  //alert(name);
-                                 //$('#password').parent().parent().next().find('a').trigger('click');
+                                 $('#password').parent().parent().next().find('a')[0].click();
                                  // alert($('#password').val());
-                                  loginCheck();
+                                 // loginCheck();
                                  },100);
                                }
 ";
@@ -60,19 +60,19 @@ namespace FillTheForm
         static int count = 0;
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (count == 1) {
-                //this.wb.Document.GetElementById("username").SetAttribute("value", this.v1.Text);
-                this.wb.Document.GetElementById("password").SetAttribute("value", this.v2.Text);
-                //点击登录按扭
-                //this.wb.Document.GetElementById("password").Parent.Parent.NextSibling.Children[0].Children[0].InvokeMember("click");
+            //if (count == 1) {
+            //    //this.wb.Document.GetElementById("username").SetAttribute("value", this.v1.Text);
+            //    this.wb.Document.GetElementById("password").SetAttribute("value", this.v2.Text);
+            //    //点击登录按扭
+            //    //this.wb.Document.GetElementById("password").Parent.Parent.NextSibling.Children[0].Children[0].InvokeMember("click");
                 
-                count += 1;
-            }
+            //    count += 1;
+            //}
         
-            if (count > 3)
-            {
-                this.timer1.Stop();
-            }
+            //if (count > 3)
+            //{
+            //    this.timer1.Stop();
+            //}
         }
         //添加脚本
         private void InstallScript(string code)
