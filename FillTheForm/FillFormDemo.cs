@@ -29,21 +29,34 @@ namespace FillTheForm
 
         private void wb_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
+            if(this.wb.Document.Url.LocalPath == "/quexian/web/login.aspx")
+            {
+                AutoLogin(this.wb.Document);
+            }
+            
+       
+            
+        }
+        /// <summary>
+        /// 自动登录
+        /// </summary>
+        /// <param name="doc"></param>
+        private void AutoLogin(HtmlDocument doc)
+        {
             var script = @" function myFunc(name,pass){
                                 setTimeout(function(){
        	                         username.value = name;
                                  password.value = pass;
                                  //alert(name);
-                                  alert($('#password').val());
+                                 //$('#password').parent().parent().next().find('a').trigger('click');
+                                 // alert($('#password').val());
+                                  loginCheck();
                                  },100);
                                }
 ";
             InstallScript(script);
             var r = this.wb.Document.InvokeScript("myFunc", new object[] { this.v1.Text, this.v2.Text });
-            //this.timer1.Start();
-            
         }
-
         static int count = 0;
         private void timer1_Tick(object sender, EventArgs e)
         {
