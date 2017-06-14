@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Web;
 using System.Windows.Forms;
 
 namespace FillTheForm
@@ -23,7 +26,20 @@ namespace FillTheForm
         {
 
         }
-
+        [DllImport("wininet.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern bool InternetSetCookie(string lpszUrlName, string lbszCookieName, string lpszCookieData);
+        private void SetCookie(string cookie,string url)
+        {
+            foreach (string c in cookie.Split(';'))
+            {
+                string[] item = c.Split('=');
+                if (item.Length == 2)
+                {
+                    InternetSetCookie(url, null, new Cookie(HttpUtility.UrlEncode(item[0]).Replace("+", ""), HttpUtility.UrlEncode(item[1]), "; expires = Session GMT", "/").ToString());
+                }
+            }
+            this.wb.Navigate(url);
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             this.wb.Navigate(LoginUrl);
@@ -31,19 +47,43 @@ namespace FillTheForm
 
         private void wb_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
+            System.Diagnostics.Trace.WriteLine(e.Url);
             //登陆界面处理　
-            if(this.wb.Document.Url.LocalPath.IndexOf("login.do")>-1)
+            if(this.wb.Document.Url.ToString().IndexOf("login.do")>-1)
             {
                 AutoLogin(this.wb.Document);
             }
+            //首页界面处理　
+            if (this.wb.Document.Url.ToString().IndexOf("index.jsp") > -1)
+            {
+                AutoIndex(this.wb.Document);
+            }
             //门诊医生开方界面
-            if (this.wb.Document.Url.LocalPath.IndexOf("feeprice.jsp") > -1)
+            if (this.wb.Document.Url.ToString().IndexOf("feeprice.jsp") > -1)
             {
                 AutoFeePrice(this.wb.Document);
             }
-           
 
+            
 
+        }
+        /// <summary>
+        /// 首页界面处理
+        /// </summary>
+        /// <param name="doc"></param>
+        private void AutoIndex(HtmlDocument doc)
+        {
+            var script = @" function goToUrl(url){
+                                setTimeout(function(){
+                                     document.location.href = url;
+                                    
+                                 },500);
+ 
+                               }
+
+";
+            InstallScript(script);
+            var r = this.wb.Document.InvokeScript("goToUrl", new object[] { FeePriceUrl });
         }
         //自动处理门诊医生开方界面
         private void AutoFeePrice(HtmlDocument doc)
@@ -72,6 +112,7 @@ namespace FillTheForm
                                   }
                                  },100);
                                }
+
 ";
             InstallScript(script);
 
@@ -143,18 +184,25 @@ namespace FillTheForm
         /// <param name="doc"></param>
         private void AutoLogin(HtmlDocument doc)
         {
-            var script = @" function zyLogin(name,pass){
+            var script = @" function zyLogin(name,pass,FeePriceUrl){
                                 setTimeout(function(){
+                                     window.close=null;
                                      document.getElementsByName('j_username')[0].value=name;
                                      document.getElementsByName('j_password')[0].value=pass;
                                      document.getElementsByName('loginButton')[0].click();
+                                    
                                  },100);
+ 
                                }
+              //这此函数替换定义，防止跳出界面，此处很重要
+              submit_form = function(){
+        　　　　　　　　　　document.all('logonform').submit();
+        　　　}
 ";
             InstallScript(script);
-            var r = this.wb.Document.InvokeScript("zyLogin", new object[] { userName, password });
-            //登陆成功后打开门诊医生开方界面
-            this.wb.Navigate(FeePriceUrl);
+            var r = this.wb.Document.InvokeScript("zyLogin", new object[] { userName, password,FeePriceUrl });
+            
+
         }
         //添加脚本
         private void InstallScript(string code)
@@ -180,6 +228,64 @@ namespace FillTheForm
             scriptElement.SetAttribute("text", code);
           
 
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            this.wb.Navigate(FeePriceUrl);
+            this.timer1.Stop();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.wb.Navigate(FeePriceUrl);
+        }
+        private void SetAllWebItemSelf(HtmlElementCollection items)
+        {
+            try
+            {
+                foreach (HtmlElement item in items)
+                {
+                    if (item.TagName.ToLower().Equals("iframe", StringComparison.OrdinalIgnoreCase) == false)
+                    {
+                        try
+                        {
+                            item.SetAttribute("target", "_self");
+                        }
+                        catch
+                        { }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            HtmlElementCollection fitems = item.Document.Window.Frames[item.Name].Document.All;
+
+                            this.SetAllWebItemSelf(fitems);
+                        }
+                        catch
+                        { }
+                    }
+                }
+            }
+            catch
+            {
+            }
+        }
+        private void wb_NewWindow(object sender, CancelEventArgs e)
+        {
+            //e.Cancel = false;
+            //WebBrowser wb = (WebBrowser)sender;//把sender给拿下，是一个WebBrowser对象
+            //wb.Navigate(FeePriceUrl);
+            
+
+        }
+
+        private void wb_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+        {
+            string url = e.Url.ToString();
+            System.Diagnostics.Trace.WriteLine(url);
+            e.Cancel = false;
         }
     }
 }
