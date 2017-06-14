@@ -10,7 +10,7 @@
     "diagnoseCmb": "test",
     "deptCmb": "test",
     "docCmb": "test",
-    "FeePrices": [
+    "feePrices": [
         {
             "pinMing": "test",
             "guiGe": "2323",
