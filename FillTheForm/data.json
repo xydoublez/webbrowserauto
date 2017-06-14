@@ -1,66 +1,560 @@
-{
-    "queryCodeTxt": "371482",
-    "patientNameTxt": "test",
-    "sexcmb": "test",
-    "ageTxt": "20",
-    "freeCost": "222",
-    "cmbPayKind": "test",
-    "mcardNoTxt": "test",
-    "medicalTypeCmb": "test",
-    "diagnoseCmb": "test",
-    "deptCmb": "test",
-    "docCmb": "test",
-    "feePrices": [
-        {
-            "pinMing": "test",
-            "guiGe": "2323",
-            "piCi": "23",
-            "lingShouJian": "23",
-            "baoZhuangDanWei": "test",
-            "shuLiang": "test",
-            "jiJiaDanWei": "test",
-            "jinE": "20",
-            "jiBenYongLiang": "20",
-            "jiLiangDanWei": "222",
-            "yongFa": "test",
-            "pinCi": "test",
-            "fuShu": "test",
-            "xiangMuDengJi": "test",
-            "zhiXingKeShi": "test"
-        },
-        {
-            "pinMing": "test",
-            "guiGe": "2323",
-            "piCi": "23",
-            "lingShouJian": "23",
-            "baoZhuangDanWei": "test",
-            "shuLiang": "test",
-            "jiJiaDanWei": "test",
-            "jinE": "20",
-            "jiBenYongLiang": "20",
-            "jiLiangDanWei": "222",
-            "yongFa": "test",
-            "pinCi": "test",
-            "fuShu": "test",
-            "xiangMuDengJi": "test",
-            "zhiXingKeShi": "test"
-        },
-        {
-            "pinMing": "test",
-            "guiGe": "2323",
-            "piCi": "23",
-            "lingShouJian": "23",
-            "baoZhuangDanWei": "test",
-            "shuLiang": "test",
-            "jiJiaDanWei": "test",
-            "jinE": "20",
-            "jiBenYongLiang": "20",
-            "jiLiangDanWei": "222",
-            "yongFa": "test",
-            "pinCi": "test",
-            "fuShu": "test",
-            "xiangMuDengJi": "test",
-            "zhiXingKeShi": "test"
-        }
-    ]
-}
+[
+  {
+    "CODEVALUE": "0035",
+    "CODENAME": "内科二病区",
+    "LOGICVALUE": "6500d3026620494e0755d43fb879cd14",
+    "SPELLCODE": "NKEBQ"
+  },
+  {
+    "CODEVALUE": "0001",
+    "CODENAME": "住院药房",
+    "LOGICVALUE": "ac2a424e8c6a94592afab6e40ec21adf",
+    "SPELLCODE": "ZYYF"
+  },
+  {
+    "CODEVALUE": "0034",
+    "CODENAME": "中医理疗科二组病区",
+    "LOGICVALUE": "21daf9fa585ad80b7250fb742b6e4138",
+    "SPELLCODE": "ZYLLKEZBQ"
+  },
+  {
+    "CODEVALUE": "888",
+    "CODENAME": "(新)虚拟报销药房",
+    "LOGICVALUE": "babc676332ad3140da0918836eca34de",
+    "SPELLCODE": "XXNBXYF"
+  },
+  {
+    "CODEVALUE": "887",
+    "CODENAME": "(新)外科虚拟",
+    "LOGICVALUE": "441e4bf21bf736113511e070a029c653",
+    "SPELLCODE": "XWKXN"
+  },
+  {
+    "CODEVALUE": "886",
+    "CODENAME": "（新）城阳虚拟病区",
+    "LOGICVALUE": "c157c3c2cf487589c24a4b5b4d5753fe",
+    "SPELLCODE": "XCYXNBQ"
+  },
+  {
+    "CODEVALUE": "996",
+    "CODENAME": "内科门诊二组（新）",
+    "LOGICVALUE": "a105322d3fcfe67858a080e70a1ded23",
+    "SPELLCODE": "NKMZEZX"
+  },
+  {
+    "CODEVALUE": "0111",
+    "CODENAME": "疼痛科",
+    "LOGICVALUE": "eed2c2cb7d316ca04839bbbd99439728",
+    "SPELLCODE": "TTK"
+  },
+  {
+    "CODEVALUE": "0112",
+    "CODENAME": "疼痛科病区",
+    "LOGICVALUE": "129330e0d9026447bbf04ea2f4c08d72",
+    "SPELLCODE": "TTKBQ"
+  },
+  {
+    "CODEVALUE": "885",
+    "CODENAME": "岳家村老年公寓",
+    "LOGICVALUE": "d1882dbe2d89fbd4f7efd8683fe2e3d4",
+    "SPELLCODE": "YJCLNGY"
+  },
+  {
+    "CODEVALUE": "003",
+    "CODENAME": "药库",
+    "LOGICVALUE": "d299481d0f87f4696b5fd1cca7678141",
+    "SPELLCODE": "YK"
+  },
+  {
+    "CODEVALUE": "004",
+    "CODENAME": "西药房",
+    "LOGICVALUE": "bc4dc9ffb7c28dfe060e901c97d64345",
+    "SPELLCODE": "XYF"
+  },
+  {
+    "CODEVALUE": "005",
+    "CODENAME": "中药房",
+    "LOGICVALUE": "d3244572944421124be1aaad4d6538dc",
+    "SPELLCODE": "ZYF"
+  },
+  {
+    "CODEVALUE": "006",
+    "CODENAME": "外科门诊",
+    "LOGICVALUE": "fb8ed6f7d05896b5c066f84211ce9a23",
+    "SPELLCODE": "WKMZ"
+  },
+  {
+    "CODEVALUE": "007",
+    "CODENAME": "内科住院一组",
+    "LOGICVALUE": "4404ea0ee929108de2ad8c06cb3310d6",
+    "SPELLCODE": "NKZYYZ"
+  },
+  {
+    "CODEVALUE": "008",
+    "CODENAME": "妇产科门诊",
+    "LOGICVALUE": "d91cd929df8d8b7ba59a35ff2409fac5",
+    "SPELLCODE": "FCKMZ"
+  },
+  {
+    "CODEVALUE": "009",
+    "CODENAME": "眼科门诊",
+    "LOGICVALUE": "d1fd30cac0fd067deab65bcf0834800d",
+    "SPELLCODE": "YKMZ"
+  },
+  {
+    "CODEVALUE": "010",
+    "CODENAME": "口腔科门诊",
+    "LOGICVALUE": "ca1744aee7c745457ac67e6f66fbac91",
+    "SPELLCODE": "KQKMZ"
+  },
+  {
+    "CODEVALUE": "011",
+    "CODENAME": "内科住院二组",
+    "LOGICVALUE": "2748dc3954ecbdee80b9b50d56194b92",
+    "SPELLCODE": "NKZYEZ"
+  },
+  {
+    "CODEVALUE": "013",
+    "CODENAME": "中医理疗科门诊一组",
+    "LOGICVALUE": "11271127295440fbbffe801c046abbde",
+    "SPELLCODE": "ZYLLKMZYZ"
+  },
+  {
+    "CODEVALUE": "012",
+    "CODENAME": "中医理疗科门诊二组",
+    "LOGICVALUE": "4794d36538ef6843f6d996cecbe2119d",
+    "SPELLCODE": "ZYLLKMZEZ"
+  },
+  {
+    "CODEVALUE": "015",
+    "CODENAME": "门诊收款处",
+    "LOGICVALUE": "e1c45ff8ed0184b53fd30880a70053f6",
+    "SPELLCODE": "MZSKC"
+  },
+  {
+    "CODEVALUE": "016",
+    "CODENAME": "住院收款处",
+    "LOGICVALUE": "10a1c7a451af5f2de427d3678336c0be",
+    "SPELLCODE": "ZYSKC"
+  },
+  {
+    "CODEVALUE": "017",
+    "CODENAME": "内科门诊一组（作废）",
+    "LOGICVALUE": "e8fe32b22a52d9db0d2a50cd429d48dc",
+    "SPELLCODE": "NKMZYZZF"
+  },
+  {
+    "CODEVALUE": "018",
+    "CODENAME": "内科门诊二组（作废）",
+    "LOGICVALUE": "802b243b93753a784ad88cf4918d3e91",
+    "SPELLCODE": "NKMZEZZF"
+  },
+  {
+    "CODEVALUE": "019",
+    "CODENAME": "外科住院",
+    "LOGICVALUE": "02fa0cfd3164bcc220be7d7b8ffcd1a5",
+    "SPELLCODE": "WKZY"
+  },
+  {
+    "CODEVALUE": "020",
+    "CODENAME": "妇产科住院",
+    "LOGICVALUE": "4d37942e59eff575f3df83cc6b3e2305",
+    "SPELLCODE": "FCKZY"
+  },
+  {
+    "CODEVALUE": "021",
+    "CODENAME": "眼科住院",
+    "LOGICVALUE": "5574c3a2e3025cb09e0672abf78173db",
+    "SPELLCODE": "YKZY"
+  },
+  {
+    "CODEVALUE": "022",
+    "CODENAME": "口腔科住院",
+    "LOGICVALUE": "34c3a478293e51aaba8d1c0365958113",
+    "SPELLCODE": "KQKZY"
+  },
+  {
+    "CODEVALUE": "023",
+    "CODENAME": "中医理疗科一组住院",
+    "LOGICVALUE": "2392d135360763bba756904ce1b03529",
+    "SPELLCODE": "ZYLLKYZZY"
+  },
+  {
+    "CODEVALUE": "024",
+    "CODENAME": "中医理疗科二组住院",
+    "LOGICVALUE": "9e63341cd7b3364d1a77979848b0c048",
+    "SPELLCODE": "ZYLLKEZZY"
+  },
+  {
+    "CODEVALUE": "56000551",
+    "CODENAME": "东关一街卫生室",
+    "LOGICVALUE": "3b0eb64e998460e573a244cb1c70ab58",
+    "SPELLCODE": "DGYJWSS"
+  },
+  {
+    "CODEVALUE": "56000552",
+    "CODENAME": "东关四街卫生室",
+    "LOGICVALUE": "f12fd1495dbe8ce4f8cf443cdc872d8e",
+    "SPELLCODE": "DGSJWSS"
+  },
+  {
+    "CODEVALUE": "56000553",
+    "CODENAME": "东关五街卫生室",
+    "LOGICVALUE": "0d05aa411e3ec96cd644f53654c3cc0b",
+    "SPELLCODE": "DGWJWSS"
+  },
+  {
+    "CODEVALUE": "56000554",
+    "CODENAME": "东环路卫生室",
+    "LOGICVALUE": "6709ed187b529105a406abc341560223",
+    "SPELLCODE": "DHLWSS"
+  },
+  {
+    "CODEVALUE": "56000555",
+    "CODENAME": "东大街二街卫生室",
+    "LOGICVALUE": "73c4ac93783bb907cdd30baad40a0071",
+    "SPELLCODE": "DDJEJWSS"
+  },
+  {
+    "CODEVALUE": "56000556",
+    "CODENAME": "邹庄子卫生室",
+    "LOGICVALUE": "19db748fbce688e699dc7e603ee1bc0e",
+    "SPELLCODE": "ZZZWSS"
+  },
+  {
+    "CODEVALUE": "56000557",
+    "CODENAME": "陈庄子卫生室",
+    "LOGICVALUE": "36ce4db7d6bab246702aeaf4cf8e2a20",
+    "SPELLCODE": "CZZWSS"
+  },
+  {
+    "CODEVALUE": "56000558",
+    "CODENAME": "马家屯卫生室",
+    "LOGICVALUE": "cb8c288fe3a7cf3f8bc24ada31f9712c",
+    "SPELLCODE": "MJTWSS"
+  },
+  {
+    "CODEVALUE": "56000559",
+    "CODENAME": "韩菜园卫生室",
+    "LOGICVALUE": "d9cb06afbb6b55ed1dd06f0843470598",
+    "SPELLCODE": "HCYWSS"
+  },
+  {
+    "CODEVALUE": "56000560",
+    "CODENAME": "孔家街卫生室",
+    "LOGICVALUE": "92ef71c88e8e591cb3efe13f21750b96",
+    "SPELLCODE": "KJJWSS"
+  },
+  {
+    "CODEVALUE": "56000561",
+    "CODENAME": "南关一街卫生室",
+    "LOGICVALUE": "51c5051aa967aa5b6f9306f0eff2d962",
+    "SPELLCODE": "NGYJWSS"
+  },
+  {
+    "CODEVALUE": "56000562",
+    "CODENAME": "南关二街卫生室",
+    "LOGICVALUE": "0837e76c1e56b1160f99a1485e69504f",
+    "SPELLCODE": "NGEJWSS"
+  },
+  {
+    "CODEVALUE": "56000563",
+    "CODENAME": "大果街卫生室",
+    "LOGICVALUE": "8582333b4dfebf5df8b1aa800fa097b2",
+    "SPELLCODE": "DGJWSS"
+  },
+  {
+    "CODEVALUE": "56000564",
+    "CODENAME": "孙家村卫生室",
+    "LOGICVALUE": "6011c2b9c7a9dbecd136aadc42d955b0",
+    "SPELLCODE": "SJCWSS"
+  },
+  {
+    "CODEVALUE": "56000274",
+    "CODENAME": "东大街一街卫生室",
+    "LOGICVALUE": "a156a9095dc5b65f50f65bad01568cb2",
+    "SPELLCODE": "DDJYJWSS"
+  },
+  {
+    "CODEVALUE": "56000275",
+    "CODENAME": "护城官庄卫生室",
+    "LOGICVALUE": "952097529612003490bf7745fe60d711",
+    "SPELLCODE": "HCGZWSS"
+  },
+  {
+    "CODEVALUE": "56000276",
+    "CODENAME": "东陈楼卫生室",
+    "LOGICVALUE": "b8d3943fc454c2fc41111d4e28b81ae3",
+    "SPELLCODE": "DCLWSS"
+  },
+  {
+    "CODEVALUE": "56000277",
+    "CODENAME": "西陈楼卫生室",
+    "LOGICVALUE": "a139725b61e27094003fef8f6166a921",
+    "SPELLCODE": "XCLWSS"
+  },
+  {
+    "CODEVALUE": "56000278",
+    "CODENAME": "前城子卫生室",
+    "LOGICVALUE": "e19e525ed869da6b0ba1c83e6e877d93",
+    "SPELLCODE": "QCZWSS"
+  },
+  {
+    "CODEVALUE": "56000279",
+    "CODENAME": "八里庄子卫生室",
+    "LOGICVALUE": "f5c82aead07865f96944bc0c81085588",
+    "SPELLCODE": "BLZZWSS"
+  },
+  {
+    "CODEVALUE": "56000280",
+    "CODENAME": "三角汪卫生室",
+    "LOGICVALUE": "f823b0826c541a70252c0e77d1f93d6a",
+    "SPELLCODE": "SJWWSS"
+  },
+  {
+    "CODEVALUE": "56000281",
+    "CODENAME": "南场卫生室",
+    "LOGICVALUE": "01cf5ca98626d8ced85b94ae2cb88d35",
+    "SPELLCODE": "NCWSS"
+  },
+  {
+    "CODEVALUE": "56000282",
+    "CODENAME": "钱家屯卫生室",
+    "LOGICVALUE": "9a43888a009a58b1ecc242cf2a0997b9",
+    "SPELLCODE": "QJTWSS"
+  },
+  {
+    "CODEVALUE": "57000060",
+    "CODENAME": "靳家园卫生室",
+    "LOGICVALUE": "14153b4eff1be676fade759bd1ca40f3",
+    "SPELLCODE": "JJYWSS"
+  },
+  {
+    "CODEVALUE": "56000283",
+    "CODENAME": "大桃园卫生室",
+    "LOGICVALUE": "2c856bdd46590b1e93bcd7cd7abda757",
+    "SPELLCODE": "DTYWSS"
+  },
+  {
+    "CODEVALUE": "56000284",
+    "CODENAME": "南关二街新村卫生室",
+    "LOGICVALUE": "0a15c9d4d91f2819df0d492dd7763954",
+    "SPELLCODE": "NGEJXCWSS"
+  },
+  {
+    "CODEVALUE": "57000059",
+    "CODENAME": "西大街卫生室",
+    "LOGICVALUE": "e1a63ccd72d1e2e7dc1b367323b35e72",
+    "SPELLCODE": "XDJWSS"
+  },
+  {
+    "CODEVALUE": "56000285",
+    "CODENAME": "后西关卫生室",
+    "LOGICVALUE": "e96c1488b90a1b9ec46b97a76027a9c1",
+    "SPELLCODE": "HXGWSS"
+  },
+  {
+    "CODEVALUE": "56000286",
+    "CODENAME": "土门首卫生室",
+    "LOGICVALUE": "21d92dd7ae459bc5135c54be9d79b972",
+    "SPELLCODE": "TMSWSS"
+  },
+  {
+    "CODEVALUE": "56000287",
+    "CODENAME": "刘菜园卫生室",
+    "LOGICVALUE": "104b1ff7deeed89969cc1eb6bad49e8a",
+    "SPELLCODE": "LCYWSS"
+  },
+  {
+    "CODEVALUE": "56000288",
+    "CODENAME": "北关卫生室",
+    "LOGICVALUE": "1475e33a91954439ce45e0d445c377df",
+    "SPELLCODE": "BGWSS"
+  },
+  {
+    "CODEVALUE": "56000289",
+    "CODENAME": "后营卫生室",
+    "LOGICVALUE": "e8ce154d964154413232f5ddcef9a45a",
+    "SPELLCODE": "HYWSS"
+  },
+  {
+    "CODEVALUE": "56000565",
+    "CODENAME": "王店子卫生室",
+    "LOGICVALUE": "665c5718dce08f441e7d96ed07b3d4db",
+    "SPELLCODE": "WDZWSS"
+  },
+  {
+    "CODEVALUE": "56000566",
+    "CODENAME": "岳家村卫生室",
+    "LOGICVALUE": "2412b52c67cc80ca6fd67cb25f4c3f35",
+    "SPELLCODE": "YJCWSS"
+  },
+  {
+    "CODEVALUE": "56000567",
+    "CODENAME": "付家洼卫生室",
+    "LOGICVALUE": "55764ea55d0c0defd662537bde8867bc",
+    "SPELLCODE": "FJWWSS"
+  },
+  {
+    "CODEVALUE": "56000568",
+    "CODENAME": "大湖卫生室",
+    "LOGICVALUE": "8e748f3f1aabce34d5412e15fd167bdc",
+    "SPELLCODE": "DHWSS"
+  },
+  {
+    "CODEVALUE": "56000571",
+    "CODENAME": "后城子卫生室",
+    "LOGICVALUE": "52ece7022d4ca378558cb7ef6d5a4de2",
+    "SPELLCODE": "HCZWSS"
+  },
+  {
+    "CODEVALUE": "56000572",
+    "CODENAME": "刘家村卫生室",
+    "LOGICVALUE": "d2c168cd2aeccb63fc537a879aff9248",
+    "SPELLCODE": "LJCWSS"
+  },
+  {
+    "CODEVALUE": "56000573",
+    "CODENAME": "杨店子卫生室",
+    "LOGICVALUE": "5b7da46a712d82328d4db7aed3a870f5",
+    "SPELLCODE": "YDZWSS"
+  },
+  {
+    "CODEVALUE": "56000574",
+    "CODENAME": "魏家村卫生室",
+    "LOGICVALUE": "af5807554c5f47ffc612ed90d931cfd8",
+    "SPELLCODE": "WJCWSS"
+  },
+  {
+    "CODEVALUE": "56000575",
+    "CODENAME": "丰家村卫生室",
+    "LOGICVALUE": "212546e69c571c26449b31d3606754e6",
+    "SPELLCODE": "FJCWSS"
+  },
+  {
+    "CODEVALUE": "56000581",
+    "CODENAME": "沈家村卫生室",
+    "LOGICVALUE": "afbf3a2aae3bf52dacbf7eaf84f60e04",
+    "SPELLCODE": "SJCWSS"
+  },
+  {
+    "CODEVALUE": "56000576",
+    "CODENAME": "七里墩子卫生室",
+    "LOGICVALUE": "f98f835eaf83e1e908fe4a7f84ca12ae",
+    "SPELLCODE": "QLDZWSS"
+  },
+  {
+    "CODEVALUE": "56000577",
+    "CODENAME": "姚家村卫生室",
+    "LOGICVALUE": "23d3580d6e6e61fc963728cdeb2ce043",
+    "SPELLCODE": "YJCWSS"
+  },
+  {
+    "CODEVALUE": "56000578",
+    "CODENAME": "董家屯卫生室",
+    "LOGICVALUE": "a2f7564fe16aa7afee55991478020e47",
+    "SPELLCODE": "DJTWSS"
+  },
+  {
+    "CODEVALUE": "56000579",
+    "CODENAME": "塘子卫生室",
+    "LOGICVALUE": "2acad58415110aaa9994448e3b5af029",
+    "SPELLCODE": "TZWSS"
+  },
+  {
+    "CODEVALUE": "56000580",
+    "CODENAME": "北关新村卫生室",
+    "LOGICVALUE": "207c63b92969e8e74cf4efecb8a019b9",
+    "SPELLCODE": "BGXCWSS"
+  },
+  {
+    "CODEVALUE": "56000569",
+    "CODENAME": "坝上卫生室",
+    "LOGICVALUE": "20997fdbe3d9c1230eb5d2183b80eefb",
+    "SPELLCODE": "BSWSS"
+  },
+  {
+    "CODEVALUE": "56000570",
+    "CODENAME": "小湖卫生室",
+    "LOGICVALUE": "0784794549f35896537e54962f2832b0",
+    "SPELLCODE": "XHWSS"
+  },
+  {
+    "CODEVALUE": "995",
+    "CODENAME": "内科门诊一组(新)",
+    "LOGICVALUE": "8cbd819d8f96d43792892fa48721457c",
+    "SPELLCODE": "NKMZYZX"
+  },
+  {
+    "CODEVALUE": "030",
+    "CODENAME": "内科一病区",
+    "LOGICVALUE": "c8e343e2effbe6be8cab18a75ed5a83f",
+    "SPELLCODE": "NKYBQ"
+  },
+  {
+    "CODEVALUE": "031",
+    "CODENAME": "外科病区",
+    "LOGICVALUE": "229ec225d3ff7956289a56ef4ba17b0f",
+    "SPELLCODE": "WKBQ"
+  },
+  {
+    "CODEVALUE": "032",
+    "CODENAME": "眼科病区",
+    "LOGICVALUE": "f9faeabc22f4c00af34e68a035074586",
+    "SPELLCODE": "YKBQ"
+  },
+  {
+    "CODEVALUE": "033",
+    "CODENAME": "中医理疗科一组病区",
+    "LOGICVALUE": "5bee54eae8502fdd6d752772a1b7ee0e",
+    "SPELLCODE": "ZYLLKYZBQ"
+  },
+  {
+    "CODEVALUE": "034",
+    "CODENAME": "妇产科病区",
+    "LOGICVALUE": "45a8bb4ca282792106a07bbbb3eb51d5",
+    "SPELLCODE": "FCKBQ"
+  },
+  {
+    "CODEVALUE": "035",
+    "CODENAME": "口腔病区",
+    "LOGICVALUE": "6ee7765be6122962e3ab1b2a7b51fb0e",
+    "SPELLCODE": "KQBQ"
+  },
+  {
+    "CODEVALUE": "001",
+    "CODENAME": "默认门诊科室",
+    "LOGICVALUE": "5104906499",
+    "SPELLCODE": "MZKS"
+  },
+  {
+    "CODEVALUE": "002",
+    "CODENAME": "默认住院科室",
+    "LOGICVALUE": "5104906498",
+    "SPELLCODE": "ZYKS"
+  },
+  {
+    "CODEVALUE": "755",
+    "CODENAME": "胃镜科",
+    "LOGICVALUE": "c3bde8b16d09b168076e20606643d240",
+    "SPELLCODE": "WJK"
+  },
+  {
+    "CODEVALUE": "902",
+    "CODENAME": "防保科药房",
+    "LOGICVALUE": "89e4deb9a1146509a71acc62647a2c75",
+    "SPELLCODE": "FBKYF"
+  },
+  {
+    "CODEVALUE": "57000093",
+    "CODENAME": "大果街新村卫生室",
+    "LOGICVALUE": "13d7e136728d24bec2556a8533efec08",
+    "SPELLCODE": "DGJXCWSS"
+  },
+  {
+    "CODEVALUE": "900",
+    "CODENAME": "防保科门诊",
+    "LOGICVALUE": "738cdea44128f093916317be71d75f84",
+    "SPELLCODE": "FBKMZ"
+  }
+]

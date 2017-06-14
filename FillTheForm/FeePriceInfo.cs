@@ -53,7 +53,7 @@ namespace FillTheForm
         /// <summary>
         /// 费用明细列表
         /// </summary>
-        public List<FeePrice> FeePriceList { get; set; }
+        public List<FeePrice> feePriceList { get; set; }
     }
 
     public class FeePrice

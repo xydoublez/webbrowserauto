@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -26,22 +28,23 @@ namespace FillTheForm
         {
 
         }
-        [DllImport("wininet.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool InternetSetCookie(string lpszUrlName, string lbszCookieName, string lpszCookieData);
-        private void SetCookie(string cookie,string url)
-        {
-            foreach (string c in cookie.Split(';'))
-            {
-                string[] item = c.Split('=');
-                if (item.Length == 2)
-                {
-                    InternetSetCookie(url, null, new Cookie(HttpUtility.UrlEncode(item[0]).Replace("+", ""), HttpUtility.UrlEncode(item[1]), "; expires = Session GMT", "/").ToString());
-                }
-            }
-            this.wb.Navigate(url);
-        }
+        //[DllImport("wininet.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        //public static extern bool InternetSetCookie(string lpszUrlName, string lbszCookieName, string lpszCookieData);
+        //private void SetCookie(string cookie,string url)
+        //{
+        //    foreach (string c in cookie.Split(';'))
+        //    {
+        //        string[] item = c.Split('=');
+        //        if (item.Length == 2)
+        //        {
+        //            InternetSetCookie(url, null, new Cookie(HttpUtility.UrlEncode(item[0]).Replace("+", ""), HttpUtility.UrlEncode(item[1]), "; expires = Session GMT", "/").ToString());
+        //        }
+        //    }
+        //    this.wb.Navigate(url);
+        //}
         private void button1_Click(object sender, EventArgs e)
         {
+            SetWebBrowserIE8Mode();
             this.wb.Navigate(LoginUrl);
         }
 
@@ -76,8 +79,7 @@ namespace FillTheForm
             var script = @" function goToUrl(url){
                                 setTimeout(function(){
                                      document.location.href = url;
-                                    
-                                 },500);
+                                 },2000);
  
                                }
 
@@ -93,24 +95,52 @@ namespace FillTheForm
 　　　　　　　　　　　　　　　　var feeChargePriceJson = eval('('+jsonInfo+')');
                                 setTimeout(function(){
                                    //1基本信息赋值
-                                   unieap.byId('queryCodeTxt').setValue(feeChargePriceJson.queryCodeTxt);
-                                   unieap.byId('patientNameTxt').setValue(feeChargePriceJson.patientNameTxt);
-                                   unieap.byId('sexcmb').setValue(feeChargePriceJson.sexcmb);
-                                   unieap.byId('ageTxt').setValue(feeChargePriceJson.ageTxt);
-                                   unieap.byId('freeCost').setValue(feeChargePriceJson.freeCost);
-                                   unieap.byId('cmbPayKind').setValue(feeChargePriceJson.cmbPayKind);
-                                   unieap.byId('mcardNoTxt').setValue(feeChargePriceJson.mcardNoTxt);
-                                   unieap.byId('medicalTypeCmb').setValue(feeChargePriceJson.medicalTypeCmb);
-                                   unieap.byId('diagnoseCmb').setValue(feeChargePriceJson.diagnoseCmb);
-                                   unieap.byId('deptCmb').setValue(feeChargePriceJson.deptCmb);
-                                   unieap.byId('docCmb').setValue(feeChargePriceJson.docCmb);
-                                  //2费用明细赋值
-                                  var feePrices = feeChargePriceJson.feePrices;
-                                  for(int i=0;i<feePrices.length;i++){
-                                      var fee = feePrices[i];
-                                      //fee.pinMing;
-                                  }
-                                 },100);
+                                    unieap.byId('queryCodeTxt').setValue(feeChargePriceJson.queryCodeTxt);
+                                    unieap.byId('patientNameTxt').setValue(feeChargePriceJson.patientNameTxt);
+                                    unieap.byId('sexcmb').setValue(feeChargePriceJson.sexcmb);
+                                    unieap.byId('ageTxt').setValue(feeChargePriceJson.ageTxt);
+                                    unieap.byId('freeCost').setValue(feeChargePriceJson.freeCost);
+                                    unieap.byId('cmbPayKind').setValue(feeChargePriceJson.cmbPayKind);
+                                    unieap.byId('mcardNoTxt').setValue(feeChargePriceJson.mcardNoTxt);
+                                    unieap.byId('medicalTypeCmb').setValue(feeChargePriceJson.medicalTypeCmb);
+                                    unieap.byId('diagnoseCmb').setValue(feeChargePriceJson.diagnoseCmb);
+                                    unieap.byId('deptCmb').setValue(feeChargePriceJson.deptCmb);
+                                    unieap.byId('docCmb').setValue(feeChargePriceJson.docCmb);
+                                    //2费用明细赋值
+                                    var feePriceList = feeChargePriceJson.feePriceList;
+                                    var rowSet=dsPatientFeeItemlist.getRowSet();
+                                    rowSet.deleteAllRows();
+                                    //unieap.byId('patientFeeItemlistGrid').getBinding().setDataStore(feePriceList); 
+                                   //添加表格
+                                    for (var i= 0;i< feePriceList.length ; i++){
+                                       //alert(feePriceList[i].pinMing);
+                                       rowSet.addRow(feePriceList[i]);
+                                      
+                                    }
+                                    //遍历赋值
+                                    for (var i= 0;i<feePriceList.length ; i++){
+                                         var feePrice = feePriceList[i];
+                                         var table = dojo.query('#patientFeeItemlistGrid .u-grid-row-table').at(i+1);
+                                         table.query('.u-grid-text2').at(0)[0].innerText=feePrice.pinMing;
+                                         table.query('.u-grid-text2').at(1)[0].innerText=feePrice.guiGe;
+                                         table.query('.u-grid-text2').at(2)[0].innerText=feePrice.piCi;
+                                         table.query('.u-grid-text2').at(3)[0].innerText=feePrice.lingShouJia;
+                                         table.query('.u-grid-text2').at(4)[0].innerText=feePrice.baoZhuangDanWei;
+                                         table.query('.u-grid-text2').at(5)[0].innerText=feePrice.shuLiang;
+                                         table.query('.u-grid-text2').at(6)[0].innerText=feePrice.jiJiaDanWei;
+                                         table.query('.u-grid-text2').at(7)[0].innerText=feePrice.jinE;
+                                         table.query('.u-grid-text2').at(8)[0].innerText=feePrice.jiBenYongLiang ;
+                                         table.query('.u-grid-text2').at(9)[0].innerText=feePrice.jiLiangDanWei;
+                                         table.query('.u-grid-text2').at(10)[0].innerText=feePrice.yongFa;
+                                         table.query('.u-grid-text2').at(11)[0].innerText=feePrice.pinCi;
+                                         table.query('.u-grid-text2').at(12)[0].innerText=feePrice.fuShu;
+                                         table.query('.u-grid-text2').at(13)[0].innerText=feePrice.xiangMuDengJi;
+                                         table.query('.u-grid-text2').at(14)[0].innerText=feePrice.zhiXingKeShi;
+
+                                    }
+　　　　　　　　　　　　　　　　　　//3预约结算
+                                    //btnsave.click();
+    },500);
                                }
 
 ";
@@ -130,10 +160,10 @@ namespace FillTheForm
             feePriceInfo.freeCost = "0.00";
             feePriceInfo.cmbPayKind = "医保";
             feePriceInfo.mcardNoTxt = "371102464910";
-            feePriceInfo.medicalTypeCmb = "普通门诊";
+            feePriceInfo.medicalTypeCmb = "11";//普通门诊11;
             feePriceInfo.diagnoseCmb = "感冒";
-            feePriceInfo.deptCmb = "外科门诊";
-            feePriceInfo.docCmb = "门诊医师";
+            feePriceInfo.deptCmb = "006";//外科门诊006
+            feePriceInfo.docCmb = "008";//门诊医师008
             //费用明细
             List<FeePrice> FeePriceList = new List<FeePrice>();
             //真实取数据库for添加列表
@@ -173,7 +203,7 @@ namespace FillTheForm
             feePrice1.zhiXingKeShi = "外科门诊";
             FeePriceList.Add(feePrice1);
 
-            feePriceInfo.FeePriceList = FeePriceList;
+            feePriceInfo.feePriceList = FeePriceList;
 
             string feeChargePriceJson = Newtonsoft.Json.JsonConvert.SerializeObject(feePriceInfo);
             var r = this.wb.Document.InvokeScript("zyAutoFeePrice", new object[] { feeChargePriceJson });
@@ -286,6 +316,21 @@ namespace FillTheForm
             string url = e.Url.ToString();
             System.Diagnostics.Trace.WriteLine(url);
             e.Cancel = false;
+        }
+
+        private void FillFormDemo_Load(object sender, EventArgs e)
+        {
+            this.Location = new Point(0, 0);
+            this.Width = Screen.PrimaryScreen.Bounds.Width - 50;
+            this.Height = Screen.PrimaryScreen.Bounds.Height - 50;
+        }
+        private bool SetWebBrowserIE8Mode()
+        {
+            RegistryKey key = Registry.LocalMachine;
+            RegistryKey software = key.OpenSubKey("SOFTWARE\\Microsoft\\Internet Explorer\\MAIN\\FeatureControl\\FEATURE_BROWSER_EMULATION", true);
+            software.SetValue(Process.GetCurrentProcess().ProcessName, "8000", RegistryValueKind.DWord);
+            software.Close();
+            return true;
         }
     }
 }
