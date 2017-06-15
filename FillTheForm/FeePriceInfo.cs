@@ -53,72 +53,10 @@ namespace FillTheForm
         /// <summary>
         /// 费用明细列表
         /// </summary>
-        public List<FeePrice> feePriceList { get; set; }
+        public dsFeeDetail patientFeeItemlist { get; set; }
     }
 
-    public class FeePrice
-    {
-        /// <summary>
-        /// 品名
-        /// </summary>
-        public string pinMing { get; set; }
-        /// <summary>
-        /// 规格
-        /// </summary>
-        public string guiGe { get; set; }
-        /// <summary>
-        /// 批次
-        /// </summary>
-        public string piCi { get; set; }
-        /// <summary>
-        /// 零售价
-        /// </summary>
-        public string lingShouJia { get; set; }
-        /// <summary>
-        /// 包装单位
-        /// </summary>
-        public string baoZhuangDanWei { get; set; }
-        /// <summary>
-        /// 数量
-        /// </summary>
-        public string shuLiang { get; set; }
-        /// <summary>
-        /// 计价单位
-        /// </summary>
-        public string jiJiaDanWei { get; set; }
-        /// <summary>
-        /// 金额
-        /// </summary>
-        public string jinE { get; set; }
-        /// <summary>
-        /// 基本用量
-        /// </summary>
-        public string jiBenYongLiang { get; set; }
-        /// <summary>
-        /// 计量单位
-        /// </summary>
-        public string jiLiangDanWei { get; set; }
-        /// <summary>
-        /// 用法
-        /// </summary>
-        public string yongFa { get; set; }
-        /// <summary>
-        /// 频次
-        /// </summary>
-        public string pinCi { get; set; }
-        /// <summary>
-        /// 付数
-        /// </summary>
-        public string fuShu { get; set; }
-        /// <summary>
-        /// 项目等级
-        /// </summary>
-        public string xiangMuDengJi { get; set; }
-        /// <summary>
-        /// 执行科室
-        /// </summary>
-        public string zhiXingKeShi { get; set; }
-    }
+    
 }
 
 

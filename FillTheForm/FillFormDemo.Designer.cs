@@ -33,7 +33,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.wb = new System.Windows.Forms.WebBrowser();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -48,6 +47,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.button1);
+            this.splitContainer1.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel1_Paint);
             // 
             // splitContainer1.Panel2
             // 
@@ -76,6 +76,7 @@
             this.wb.Size = new System.Drawing.Size(829, 730);
             this.wb.TabIndex = 0;
             this.wb.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.wb_DocumentCompleted);
+            this.wb.Navigated += new System.Windows.Forms.WebBrowserNavigatedEventHandler(this.wb_Navigated);
             this.wb.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.wb_Navigating);
             this.wb.NewWindow += new System.ComponentModel.CancelEventHandler(this.wb_NewWindow);
             // 
@@ -95,7 +96,6 @@
             this.Load += new System.EventHandler(this.FillFormDemo_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
-            
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 

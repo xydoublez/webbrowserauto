@@ -44,25 +44,26 @@ namespace FillTheForm
         //}
         private void button1_Click(object sender, EventArgs e)
         {
-            SetWebBrowserIE8Mode();
+            //SetWebBrowserIE8Mode();
             this.wb.Navigate(LoginUrl);
+            this.button1.Enabled = false;
         }
 
         private void wb_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
             System.Diagnostics.Trace.WriteLine(e.Url);
             //登陆界面处理　
-            if(this.wb.Document.Url.ToString().IndexOf("login.do")>-1)
+            if(e.Url.ToString().IndexOf("login.do")>-1)
             {
                 AutoLogin(this.wb.Document);
             }
             //首页界面处理　
-            if (this.wb.Document.Url.ToString().IndexOf("index.jsp") > -1)
+            if (e.Url.ToString().IndexOf("index.jsp") > -1)
             {
                 AutoIndex(this.wb.Document);
             }
             //门诊医生开方界面
-            if (this.wb.Document.Url.ToString().IndexOf("feeprice.jsp") > -1)
+            if (e.Url.ToString().IndexOf("feeprice.jsp") > -1)
             {
                 AutoFeePrice(this.wb.Document);
             }
@@ -80,8 +81,9 @@ namespace FillTheForm
                                 setTimeout(function(){
                                      document.location.href = url;
                                  },2000);
- 
+                              
                                }
+                            //window.alert=function(){};
 
 ";
             InstallScript(script);
@@ -96,51 +98,40 @@ namespace FillTheForm
                                 setTimeout(function(){
                                    //1基本信息赋值
                                     unieap.byId('queryCodeTxt').setValue(feeChargePriceJson.queryCodeTxt);
-                                    unieap.byId('patientNameTxt').setValue(feeChargePriceJson.patientNameTxt);
-                                    unieap.byId('sexcmb').setValue(feeChargePriceJson.sexcmb);
-                                    unieap.byId('ageTxt').setValue(feeChargePriceJson.ageTxt);
-                                    unieap.byId('freeCost').setValue(feeChargePriceJson.freeCost);
-                                    unieap.byId('cmbPayKind').setValue(feeChargePriceJson.cmbPayKind);
-                                    unieap.byId('mcardNoTxt').setValue(feeChargePriceJson.mcardNoTxt);
-                                    unieap.byId('medicalTypeCmb').setValue(feeChargePriceJson.medicalTypeCmb);
+                                    //回车方法加载基本信息
+                                     changeCodeTxt();
+                                    //unieap.byId('patientNameTxt').setValue(feeChargePriceJson.patientNameTxt);
+                                    //unieap.byId('sexcmb').setValue(feeChargePriceJson.sexcmb);
+                                    //unieap.byId('ageTxt').setValue(feeChargePriceJson.ageTxt);
+                                    //unieap.byId('freeCost').setValue(feeChargePriceJson.freeCost);
+                                    //unieap.byId('cmbPayKind').setValue(feeChargePriceJson.cmbPayKind);
+                                    //unieap.byId('mcardNoTxt').setValue(feeChargePriceJson.mcardNoTxt);
+                                    //unieap.byId('medicalTypeCmb').setValue(feeChargePriceJson.medicalTypeCmb);
                                     unieap.byId('diagnoseCmb').setValue(feeChargePriceJson.diagnoseCmb);
                                     unieap.byId('deptCmb').setValue(feeChargePriceJson.deptCmb);
                                     unieap.byId('docCmb').setValue(feeChargePriceJson.docCmb);
-                                    //2费用明细赋值
-                                    var feePriceList = feeChargePriceJson.feePriceList;
-                                    var rowSet=dsPatientFeeItemlist.getRowSet();
+                                  
+                                     //2费用明细赋值
+                                    var rowSet= dsPatientFeeItemlist.getRowSet();
                                     rowSet.deleteAllRows();
-                                    //unieap.byId('patientFeeItemlistGrid').getBinding().setDataStore(feePriceList); 
-                                   //添加表格
-                                    for (var i= 0;i< feePriceList.length ; i++){
-                                       //alert(feePriceList[i].pinMing);
-                                       rowSet.addRow(feePriceList[i]);
-                                      
+                                    var patientFeeItemlist =feeChargePriceJson.patientFeeItemlist;
+                                    dsPatientFeeItemlist.rowSet.primary  = feeChargePriceJson.patientFeeItemlist.rowSet.primary;
+                                    dsPatientFeeItemlist.addMetaData('meta',patientFeeItemlist.metaData);
+                                    var rowCount=dsPatientFeeItemlist.getRowSet().getRowCount()
+                                    //alert(rowCount);
+                                    var repcipeId=dsPatientFeeItemlist.getRowSet().getRow(0).getItemValue('OPB_FEEDETAIL_RECIPEID');
+                                    for (var i = 0; i < rowCount; i++)
+                                    {
+                                            var feeItemId = dsPatientFeeItemlist.getRowSet().getRow(i).getItemValue('OPB_FEEDETAIL_FEEITEMID');
+                                            dsPatientFeeItemlist.getRowSet().getRow(i).setItemValue('OPB_FEEDETAIL_FEEITEMID', feeItemId + i);
+                                            dsPatientFeeItemlist.getRowSet().getRow(i).setItemValue('OPB_FEEDETAIL_RECIPEID', repcipeId);
+                                            dsPatientFeeItemlist.getRowSet().getRow(i).setRowStatus(1);
                                     }
-                                    //遍历赋值
-                                    for (var i= 0;i<feePriceList.length ; i++){
-                                         var feePrice = feePriceList[i];
-                                         var table = dojo.query('#patientFeeItemlistGrid .u-grid-row-table').at(i+1);
-                                         table.query('.u-grid-text2').at(0)[0].innerText=feePrice.pinMing;
-                                         table.query('.u-grid-text2').at(1)[0].innerText=feePrice.guiGe;
-                                         table.query('.u-grid-text2').at(2)[0].innerText=feePrice.piCi;
-                                         table.query('.u-grid-text2').at(3)[0].innerText=feePrice.lingShouJia;
-                                         table.query('.u-grid-text2').at(4)[0].innerText=feePrice.baoZhuangDanWei;
-                                         table.query('.u-grid-text2').at(5)[0].innerText=feePrice.shuLiang;
-                                         table.query('.u-grid-text2').at(6)[0].innerText=feePrice.jiJiaDanWei;
-                                         table.query('.u-grid-text2').at(7)[0].innerText=feePrice.jinE;
-                                         table.query('.u-grid-text2').at(8)[0].innerText=feePrice.jiBenYongLiang ;
-                                         table.query('.u-grid-text2').at(9)[0].innerText=feePrice.jiLiangDanWei;
-                                         table.query('.u-grid-text2').at(10)[0].innerText=feePrice.yongFa;
-                                         table.query('.u-grid-text2').at(11)[0].innerText=feePrice.pinCi;
-                                         table.query('.u-grid-text2').at(12)[0].innerText=feePrice.fuShu;
-                                         table.query('.u-grid-text2').at(13)[0].innerText=feePrice.xiangMuDengJi;
-                                         table.query('.u-grid-text2').at(14)[0].innerText=feePrice.zhiXingKeShi;
+                                    unieap.byId('patientFeeItemlistGrid').getBinding().setDataStore(dsPatientFeeItemlist);
+                                    showGroupByInvoice();
 
-                                    }
-　　　　　　　　　　　　　　　　　　//3预约结算
-                                    //btnsave.click();
-    },500);
+                                },1000);
+                              
                                }
 
 ";
@@ -165,46 +156,20 @@ namespace FillTheForm
             feePriceInfo.deptCmb = "006";//外科门诊006
             feePriceInfo.docCmb = "008";//门诊医师008
             //费用明细
-            List<FeePrice> FeePriceList = new List<FeePrice>();
-            //真实取数据库for添加列表
-            FeePrice feePrice = new FeePrice();
-            feePrice.pinMing = "无痛皮试";
-            feePrice.guiGe = "";
-            feePrice.piCi = "";
-            feePrice.lingShouJia = "8";
-            feePrice.baoZhuangDanWei = "次";
-            feePrice.shuLiang = "1";
-            feePrice.jiJiaDanWei = "次";
-            feePrice.jinE = "8.00";
-            feePrice.jiBenYongLiang = "";
-            feePrice.jiLiangDanWei = "";
-            feePrice.yongFa = "";
-            feePrice.pinCi = "";
-            feePrice.fuShu = "";
-            feePrice.xiangMuDengJi = "甲类";
-            feePrice.zhiXingKeShi = "外科门诊";
-            FeePriceList.Add(feePrice);
+            //根据模板生成费用明细对象
+            dsFeeDetail patientFeeItemlist = Newtonsoft.Json.JsonConvert.DeserializeObject<dsFeeDetail>(System.IO.File.ReadAllText("data.json"));
 
-            FeePrice feePrice1 = new FeePrice();
-            feePrice1.pinMing = "破伤风抗毒素注射液";
-            feePrice1.guiGe = "1500u*10支";
-            feePrice1.piCi = "000000";
-            feePrice1.lingShouJia = "30";
-            feePrice1.baoZhuangDanWei = "盒";
-            feePrice1.shuLiang = "1";
-            feePrice1.jiJiaDanWei = "支";
-            feePrice1.jinE = "30.00";
-            feePrice1.jiBenYongLiang = "";
-            feePrice1.jiLiangDanWei = "u";
-            feePrice1.yongFa = "";
-            feePrice1.pinCi = "";
-            feePrice1.fuShu = "";
-            feePrice1.xiangMuDengJi = "甲类";
-            feePrice1.zhiXingKeShi = "外科门诊";
-            FeePriceList.Add(feePrice1);
+            ////start 正式时从数据库取费用明细 for添加
+            ////明细重新赋值
+            //patientFeeItemlist.rowSet.primary = new List<Primary>();
+            ////单条明细 for循环添加
+            //Primary primary = new Primary();
+            //primary.BATCHNO = "";
+            ////
+            //patientFeeItemlist.rowSet.primary.Add(primary);
+            ////end 正式时从数据库取费用明细 for添加
 
-            feePriceInfo.feePriceList = FeePriceList;
-
+            feePriceInfo.patientFeeItemlist = patientFeeItemlist;
             string feeChargePriceJson = Newtonsoft.Json.JsonConvert.SerializeObject(feePriceInfo);
             var r = this.wb.Document.InvokeScript("zyAutoFeePrice", new object[] { feeChargePriceJson });
         }
@@ -314,8 +279,8 @@ namespace FillTheForm
         private void wb_Navigating(object sender, WebBrowserNavigatingEventArgs e)
         {
             string url = e.Url.ToString();
-            System.Diagnostics.Trace.WriteLine(url);
-            e.Cancel = false;
+            //System.Diagnostics.Trace.WriteLine(url);
+           
         }
 
         private void FillFormDemo_Load(object sender, EventArgs e)
@@ -331,6 +296,17 @@ namespace FillTheForm
             software.SetValue(Process.GetCurrentProcess().ProcessName, "8000", RegistryValueKind.DWord);
             software.Close();
             return true;
+        }
+
+        private void wb_Navigated(object sender, WebBrowserNavigatedEventArgs e)
+        {
+            //禁用alert
+            //InstallScript("window.alert = function () { }");
+        }
+
+        private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

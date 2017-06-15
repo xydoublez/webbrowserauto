@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="dsFeeDetail.cs" />
     <Compile Include="FeePriceInfo.cs" />
     <Compile Include="FillFormDemo.cs">
       <SubType>Form</SubType>
