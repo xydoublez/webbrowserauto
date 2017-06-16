@@ -54,7 +54,7 @@ namespace FillTheForm
 
         private void wb_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            System.Diagnostics.Trace.WriteLine(e.Url);
+            System.Diagnostics.Trace.WriteLine("DocumentCompleted："+e.Url);
             //登陆界面处理　
             if(e.Url.ToString().IndexOf("login.do")>-1)
             {
@@ -90,12 +90,11 @@ namespace FillTheForm
 
 ";
             InstallScript(script);
-            var r = this.wb.Document.InvokeScript("goToUrl", new object[] { FeePriceUrl });
+            //var r = this.wb.Document.InvokeScript("goToUrl", new object[] { FeePriceUrl });
         }
         //自动处理门诊医生开方界面
         private void AutoFeePrice(HtmlDocument doc)
         {
-            //unieap.byId("queryCodeTxt").setValue("test")
             var script = @" function zyAutoFeePrice(jsonInfo){
 　　　　　　　　　　　　　　　　var feeChargePriceJson = eval('('+jsonInfo+')');
                                 setTimeout(function(){
@@ -146,11 +145,12 @@ namespace FillTheForm
                             }
 
 ";
-            InstallScript(script);
 
+
+            //获取门诊医生开方界面frame对象，注意page_1399430526848此值查看网页获得的，其他页面类推
+            var frameFeePrice = this.wb.Document.Window.Frames["mianFrame"].Document.Window.Frames["middern"].Frames["frmMid"].Frames["page_1399430526848"].Document;
+            InstallScript(script, frameFeePrice);
             var feeChargePriceJson = getFeePriceInfoJson("372826193205043124");
-
-
             var r = this.wb.Document.InvokeScript("zyAutoFeePrice", new object[] { feeChargePriceJson });
         }
         public string getFeePriceInfoJson(string idcard)
@@ -216,20 +216,33 @@ namespace FillTheForm
 
         }
         //添加脚本
-        private void InstallScript(string code)
+        private void InstallScript(string code,HtmlDocument frameDoc = null)
         {
 
             if (null == this.wb.Document || ( string.IsNullOrEmpty(code)))
                 return;
+            
             HtmlElement scriptElement = null;
+            HtmlElementCollection elements = null;
             if (null == scriptElement)
             {
-                scriptElement = this.wb.Document.CreateElement("script");
-
-                HtmlElementCollection elements = this.wb.Document.GetElementsByTagName("head");
-
+                if (frameDoc == null)
+                {
+                    scriptElement = this.wb.Document.CreateElement("script");
+                    elements = this.wb.Document.GetElementsByTagName("head");
+                    
+                }
+                else
+                {
+                    scriptElement = frameDoc.CreateElement("script");
+                    elements = frameDoc.GetElementsByTagName("head");
+                    
+                }
                 if (elements.Count > 0)
-                    this.wb.Document.GetElementsByTagName("head")[0].AppendChild(scriptElement);
+                    elements[0].AppendChild(scriptElement);
+
+
+
 
             }
 
@@ -240,7 +253,6 @@ namespace FillTheForm
           
 
         }
-
         private void timer1_Tick(object sender, EventArgs e)
         {
             this.wb.Navigate(FeePriceUrl);
