@@ -13,6 +13,7 @@ using System.Windows.Forms;
 
 namespace FillTheForm
 {
+    [System.Runtime.InteropServices.ComVisibleAttribute(true)]
     public partial class FillFormDemo : Form
     {
         string userName = System.Configuration.ConfigurationManager.AppSettings["userName"];
@@ -46,6 +47,8 @@ namespace FillTheForm
         {
             //SetWebBrowserIE8Mode();
             this.wb.Navigate(LoginUrl);
+            //js调用C#用
+            this.wb.ObjectForScripting = this;
             this.button1.Enabled = false;
         }
 
@@ -129,22 +132,36 @@ namespace FillTheForm
                                     }
                                     unieap.byId('patientFeeItemlistGrid').getBinding().setDataStore(dsPatientFeeItemlist);
                                     showGroupByInvoice();
-
+                                  
+                                   
                                 },1000);
                               
-                               }
+                             }
+　　　　　　　　　　　　　　function zyProcNext(idcard){
+                                //调用C#的中方法获取信息，处理下一个
+                                setTimeout(function(){
+                                            var json = window.external.getFeePriceInfoJson(idcard);
+                                            zyAutoFeePrice(json);
+                                },1000);
+                            }
 
 ";
             InstallScript(script);
 
+            var feeChargePriceJson = getFeePriceInfoJson("372826193205043124");
 
+
+            var r = this.wb.Document.InvokeScript("zyAutoFeePrice", new object[] { feeChargePriceJson });
+        }
+        public string getFeePriceInfoJson(string idcard)
+        {
             //测试用
             //string feeChargePriceJson = System.IO.File.ReadAllText("data.json");
 
             ////正式查询数据库给feePriceInfo
             FeePriceInfo feePriceInfo = new FeePriceInfo();
             //基本信息
-            feePriceInfo.queryCodeTxt = "372826193205043124";
+            feePriceInfo.queryCodeTxt = idcard;
             feePriceInfo.patientNameTxt = "宋立玉";
             feePriceInfo.sexcmb = "女";
             feePriceInfo.ageTxt = "85";
@@ -170,8 +187,7 @@ namespace FillTheForm
             ////end 正式时从数据库取费用明细 for添加
 
             feePriceInfo.patientFeeItemlist = patientFeeItemlist;
-            string feeChargePriceJson = Newtonsoft.Json.JsonConvert.SerializeObject(feePriceInfo);
-            var r = this.wb.Document.InvokeScript("zyAutoFeePrice", new object[] { feeChargePriceJson });
+            return Newtonsoft.Json.JsonConvert.SerializeObject(feePriceInfo);
         }
         /// <summary>
         /// 自动登录
@@ -307,6 +323,14 @@ namespace FillTheForm
         private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            if (this.button1.Enabled == false)
+            {
+                var r = this.wb.Document.InvokeScript("zyProcNext", new object[] { "372826196509271525" });
+            }
         }
     }
 }
