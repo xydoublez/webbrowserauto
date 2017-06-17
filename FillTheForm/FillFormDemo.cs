@@ -60,19 +60,33 @@ namespace FillTheForm
             {
                 AutoLogin(this.wb.Document);
             }
+            //验证页处理　
+            if (e.Url.ToString().IndexOf("j_unieap_security_check.do") > -1)
+            {
+                AutoCheckDo(this.wb.Document);
+            }
             //首页界面处理　
             if (e.Url.ToString().IndexOf("index.jsp") > -1)
             {
                 AutoIndex(this.wb.Document);
             }
             //门诊医生开方界面
-            if (e.Url.ToString().IndexOf("feeprice.jsp") > -1)
+            if (e.Url.ToString().IndexOf(FeePriceUrl) > -1)
             {
                 AutoFeePrice(this.wb.Document);
             }
 
             
 
+        }
+        /// <summary>
+        /// 验证页处理　登陆失败用，根据测试，进此方法，则登陆失败
+        /// </summary>
+        /// <param name="doc"></param>
+        private void AutoCheckDo(HtmlDocument doc)
+        {
+                AfterLoginError();
+            
         }
         /// <summary>
         /// 首页界面处理
@@ -93,10 +107,12 @@ namespace FillTheForm
             //var r = this.wb.Document.InvokeScript("goToUrl", new object[] { FeePriceUrl });
         }
         //自动处理门诊医生开方界面
+        HtmlDocument frameFeePrice = null;
         private void AutoFeePrice(HtmlDocument doc)
         {
             var script = @" function zyAutoFeePrice(jsonInfo){
 　　　　　　　　　　　　　　　　var feeChargePriceJson = eval('('+jsonInfo+')');
+                                //alert(document.location.href);
                                 setTimeout(function(){
                                    //1基本信息赋值
                                     unieap.byId('queryCodeTxt').setValue(feeChargePriceJson.queryCodeTxt);
@@ -148,10 +164,10 @@ namespace FillTheForm
 
 
             //获取门诊医生开方界面frame对象，注意page_1399430526848此值查看网页获得的，其他页面类推
-            var frameFeePrice = this.wb.Document.Window.Frames["mianFrame"].Document.Window.Frames["middern"].Frames["frmMid"].Frames["page_1399430526848"].Document;
+            frameFeePrice = this.wb.Document.Window.Frames["mianFrame"].Document.Window.Frames["middern"].Frames["frmMid"].Frames["page_1399430526848"].Document;
             InstallScript(script, frameFeePrice);
             var feeChargePriceJson = getFeePriceInfoJson("372826193205043124");
-            var r = this.wb.Document.InvokeScript("zyAutoFeePrice", new object[] { feeChargePriceJson });
+            var r = frameFeePrice.InvokeScript("zyAutoFeePrice", new object[] { feeChargePriceJson });
         }
         public string getFeePriceInfoJson(string idcard)
         {
@@ -189,6 +205,7 @@ namespace FillTheForm
             feePriceInfo.patientFeeItemlist = patientFeeItemlist;
             return Newtonsoft.Json.JsonConvert.SerializeObject(feePriceInfo);
         }
+
         /// <summary>
         /// 自动登录
         /// </summary>
@@ -201,17 +218,17 @@ namespace FillTheForm
                                      document.getElementsByName('j_username')[0].value=name;
                                      document.getElementsByName('j_password')[0].value=pass;
                                      document.getElementsByName('loginButton')[0].click();
-                                    
                                  },100);
  
                                }
               //这此函数替换定义，防止跳出界面，此处很重要
               submit_form = function(){
         　　　　　　　　　　document.all('logonform').submit();
+                            
         　　　}
 ";
             InstallScript(script);
-            var r = this.wb.Document.InvokeScript("zyLogin", new object[] { userName, password,FeePriceUrl });
+            var r = this.wb.Document.InvokeScript("zyLogin", new object[] { this.txtUserName.Text.Trim(), this.txtPassWord.Text.Trim(),FeePriceUrl });
             
 
         }
@@ -341,8 +358,18 @@ namespace FillTheForm
         {
             if (this.button1.Enabled == false)
             {
-                var r = this.wb.Document.InvokeScript("zyProcNext", new object[] { "372826196509271525" });
+                var r = frameFeePrice.InvokeScript("zyProcNext", new object[] { "372826196509271525" });
             }
+        }
+        /// <summary>
+        /// 判定是否登陆失败并处理　
+        /// </summary>
+        public void AfterLoginError()
+        {
+            
+            MessageBox.Show("用户名或密码不正确！请重新输入用户名与密码！");
+            this.txtUserName.Focus();
+            this.button1.Enabled = true;
         }
     }
 }

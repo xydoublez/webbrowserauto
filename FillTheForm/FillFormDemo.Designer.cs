@@ -30,6 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtPassWord = new System.Windows.Forms.TextBox();
+            this.txtUserName = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.wb = new System.Windows.Forms.WebBrowser();
@@ -47,6 +51,10 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.label2);
+            this.splitContainer1.Panel1.Controls.Add(this.label1);
+            this.splitContainer1.Panel1.Controls.Add(this.txtPassWord);
+            this.splitContainer1.Panel1.Controls.Add(this.txtUserName);
             this.splitContainer1.Panel1.Controls.Add(this.button2);
             this.splitContainer1.Panel1.Controls.Add(this.button1);
             this.splitContainer1.Panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.splitContainer1_Panel1_Paint);
@@ -59,9 +67,49 @@
             this.splitContainer1.SplitterDistance = 175;
             this.splitContainer1.TabIndex = 0;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label2.ForeColor = System.Drawing.Color.Blue;
+            this.label2.Location = new System.Drawing.Point(24, 52);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(59, 16);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "密码：";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.ForeColor = System.Drawing.Color.Blue;
+            this.label1.Location = new System.Drawing.Point(24, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(76, 16);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "用户名：";
+            // 
+            // txtPassWord
+            // 
+            this.txtPassWord.Cursor = System.Windows.Forms.Cursors.Default;
+            this.txtPassWord.Location = new System.Drawing.Point(27, 79);
+            this.txtPassWord.Name = "txtPassWord";
+            this.txtPassWord.PasswordChar = '*';
+            this.txtPassWord.Size = new System.Drawing.Size(100, 21);
+            this.txtPassWord.TabIndex = 3;
+            this.txtPassWord.Text = "6882886";
+            // 
+            // txtUserName
+            // 
+            this.txtUserName.Location = new System.Drawing.Point(27, 28);
+            this.txtUserName.Name = "txtUserName";
+            this.txtUserName.Size = new System.Drawing.Size(100, 21);
+            this.txtUserName.TabIndex = 2;
+            this.txtUserName.Text = "51049064inf";
+            // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(26, 138);
+            this.button2.Location = new System.Drawing.Point(26, 194);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(101, 23);
             this.button2.TabIndex = 1;
@@ -71,7 +119,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(26, 34);
+            this.button1.Location = new System.Drawing.Point(26, 146);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(101, 23);
             this.button1.TabIndex = 0;
@@ -107,6 +155,7 @@
             this.Text = "自动填写表单";
             this.Load += new System.EventHandler(this.FillFormDemo_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -120,5 +169,9 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtPassWord;
+        private System.Windows.Forms.TextBox txtUserName;
     }
 }
