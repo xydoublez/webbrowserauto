@@ -1,4 +1,10 @@
 ﻿此文件夹导出数据用
-
+表结构如下
+--药品目录数据
 create table druginfo
-(统筹区 varchar(30),药品编码 varchar(30),药品通用名 varchar(30),规格 varchar(30),剂型 varchar(30),等级 varchar(30),最高价格 varchar(30),发票科目 varchar(30),自付比例 varchar(30),批发单位 varchar(30),批准文号 varchar(30),限定天数 varchar(30),开始日期 varchar(30),终止日期 varchar(30),备注 varchar(30))
+(统筹区 varchar(30),药品编码 varchar(30),药品通用名 varchar(30),规格 varchar(30),剂型 varchar(30),等级 varchar(30),最高价格 varchar(30),发票科目 varchar(30),自付比例 varchar(30),批发单位 varchar(30),批准文号 varchar(30),限定天数 varchar(30),开始日期 varchar(30),终止日期 varchar(30),备注 varchar(100))
+--获取诊疗目录数据
+create table undruginfo( 
+统筹区 varchar(30),项目编码 varchar(30),项目名称 varchar(30), 等级 varchar(30),最高价格  varchar(30),发票科目 varchar(30),自付比例 varchar(30),开始日期 varchar(30),终止日期 varchar(30), 医院等级 varchar(30),备注 varchar(100))
+--病种目录数据
+create table disease( 统筹区 varchar(30),疾病编码 varchar(30),病种名称 varchar(30), 疾病分类 varchar(30), 病种类别 varchar(30), 有效标志 varchar(30),备注 varchar(100))

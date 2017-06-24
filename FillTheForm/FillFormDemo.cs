@@ -1,4 +1,6 @@
-﻿using FillTheForm.drug;
+﻿using FillTheForm.disease;
+using FillTheForm.drug;
+using FillTheForm.undrug;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -70,6 +72,7 @@ namespace FillTheForm
             //首页界面处理　
             if (e.Url.ToString().IndexOf("index.jsp") > -1)
             {
+                btnGetData.Enabled = true;
                 AutoIndex(this.wb.Document);
             }
             //门诊医生开方界面
@@ -77,27 +80,27 @@ namespace FillTheForm
             {
                 AutoFeePrice(this.wb.Document);
             }
-            //药品目录管理获取数据
-            if (e.Url.ToString().IndexOf("si_druginfo.jsp") > -1)
-            {
-                AutoGetDrugInfo(this.wb.Document);
-            }
+            ////药品目录管理获取数据
+            //if (e.Url.ToString().IndexOf("si_druginfo.jsp") > -1)
+            //{
+            //    AutoGetDrugInfo(this.wb.Document);
+            //}
 
 
 
         }
         private HtmlDocument frameDrugInfo;
-        /// <summary>
-        /// 获取药品目录数据，导入sql脚本到drug.txt
-        /// </summary>
-        /// <param name="doc"></param>
-        private void AutoGetDrugInfo(HtmlDocument doc)
-        {
-            var script = File.ReadAllText("script\\druginfo.js");
-            frameDrugInfo = this.wb.Document.Window.Frames["mianFrame"].Document.Window.Frames["middern"].Frames["frmMid"].Frames["page_1280910172796"].Document;
-            InstallScript(script, frameDrugInfo);
+        ///// <summary>
+        ///// 获取药品目录数据，导入sql脚本到drug.txt
+        ///// </summary>
+        ///// <param name="doc"></param>
+        //private void AutoGetDrugInfo(HtmlDocument doc)
+        //{
+        //    var script = File.ReadAllText("script\\druginfo.js");
+        //    frameDrugInfo = this.wb.Document.Window.Frames["mianFrame"].Document.Window.Frames["middern"].Frames["frmMid"].Frames["page_1280910172796"].Document;
+        //    InstallScript(script, frameDrugInfo);
 
-        }
+        //}
         public void OnWriteDrugInfoSucess()
         {
             MessageBox.Show("导出药品成功");
@@ -425,33 +428,29 @@ namespace FillTheForm
         {
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            File.Delete("result//druginfo.txt");
+            GetDrug();
+            GetUnDrug();
+            GetDisease();
+            sw.Stop();
+            MessageBox.Show("耗时：" + sw.ElapsedMilliseconds+"毫秒");
+
+        }
+        #region 获取药品目录数据
+        /// <summary>
+        /// 获取药品目录
+        /// </summary>
+        private void GetDrug()
+        {
+            File.Delete("result//药品目录数据.txt");
             //var r = frameDrugInfo.InvokeScript("zyGetDrugData");
-            
+
             List<string> areas = new List<string> { "371100", "371101", "371102", "371103", "371104", "371121", "371122", "371151" };
             foreach (var item in areas)
             {
                 int pageNumber = 1;
-                getDrugInfo(ref pageNumber, 300, 0,item);
+                getDrugInfo(ref pageNumber, 300, 0, item);
             }
-            
-            sw.Stop();
-            MessageBox.Show("药品获取成功！耗时：" + sw.ElapsedMilliseconds);
 
-        }
-
-
-        private void button4_Click(object sender, EventArgs e)
-        {
-            //frameDrugInfo.GetElementById("unieap_grid_view_toolbar_0").Children[0].Children[0].Children[0].Children[0].GetElementsByTagName("td")[4].FirstChild.InvokeMember("click");
-
-            //var r = frameDrugInfo.InvokeScript("zyWriteDrugData");
-
-            //getDrugInfo();
-        }
-        public static DateTime GetTime(string timeStamp)
-        {
-            return TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1)).AddMilliseconds(long.Parse(timeStamp));
         }
         private void getDrugInfo(ref int pageNumber, int pageSize, int recordCount, string areaCode)
         {
@@ -493,7 +492,7 @@ namespace FillTheForm
             while (pageNumber <= pageCount)
             {
                 System.Diagnostics.Trace.WriteLine("number:" + pageNumber + " count:" + recordCount);
-                getDrugInfo(ref pageNumber, pageSize, recordCount,areaCode);
+                getDrugInfo(ref pageNumber, pageSize, recordCount, areaCode);
 
             }
 
@@ -527,8 +526,202 @@ namespace FillTheForm
                 sb.Append(");\r\n");
             }
             System.Diagnostics.Trace.WriteLine(sb.ToString());
-            File.AppendAllText("result\\druginfo.txt", sb.ToString());
+            File.AppendAllText("result\\药品目录数据.txt", sb.ToString());
         }
+        #endregion 获取药品目录数据
+        #region 获取诊疗目录数据
+        /// <summary>
+        /// 获取诊疗目录数据
+        /// </summary>
+        private void GetUnDrug()
+        {
+            File.Delete("result//疹疗目录数据.txt");
+            //var r = frameDrugInfo.InvokeScript("zyGetDrugData");
+
+            List<string> areas = new List<string> { "371100", "371101", "371102", "371103", "371104", "371121", "371122", "371151" };
+            foreach (var item in areas)
+            {
+                int pageNumber = 1;
+                GetUnDrugInfo(ref pageNumber, 300, 0, item);
+            }
+
+        }
+        private void GetUnDrugInfo(ref int pageNumber, int pageSize, int recordCount, string areaCode)
+        {
+            HttpHelper http = new HttpHelper();
+
+            string data = "{ header:{ \"code\":0,\"message\":{ \"title\":\"\",\"detail\":\"\"}" +
+            " },body: { dataStores: { \"undruginfo\":{ rowSet: { \"primary\":[],\"filter\":[],\"delete\":[] " +
+            " },name:\"undruginfo\",pageNumber: " + pageNumber + ", pageSize: " + pageSize + ",recordCount: " + recordCount + ",rowSetName:\"ncm.si.SI_UNDRUGINFO\"," +
+            " conditionValues:[[\"03\",12],[\"" + areaCode + "\",12]],parameters:[[\"03\",12],[\"" + areaCode + "\",12]]," +
+            " condition:\" PAYKINDCODE = ?  and AREACODE = ? \"}," +
+            "\"invosubject\":{rowSet:{\"primary\":[],\"filter\":[],\"delete\":[]},name:\"invosubject\"," +
+            "pageNumber:1,pageSize:2147483647,recordCount:0,rowSetName:\"ncm.si.SI_INVOSUBJECT\"," +
+            "conditionValues:[[\"03\",12],[\"" + areaCode + "\",12]],parameters:[[\"03\",12],[\"" + areaCode + "\",12]],"
+            + "condition:\" PAYKINDCODE = ?  and AREACODE = ? \"}},parameters:{}}}";
+            HttpItem item = new HttpItem();
+            item.URL = "http://10.66.1.6:8088/EAPDomain/SiBusinessDelegateAction.do?method=submit&BUSINESS_REQUEST_ID=REQ-ZA-M-001-00&MENUID=1280910172796&BUSINESS_ID=";
+            item.Method = "post";
+            item.Postdata = data;
+            item.Encoding = Encoding.GetEncoding("UTF-8");
+            item.Cookie = this.wb.Document.Cookie;
+            item.ContentType = "multipart/form-data";
+            item.Header.Add("x-requested-with", "XMLHttpRequest");
+            item.Header.Add("ajaxrequest", "true");
+            item.Header.Add("Pragma", "no-cache");
+            item.Referer = "http://10.66.1.6:8088/EAPDomain/si/pages/ncm/druginfo/si_druginfo.jsp?menuid=1280910172796";
+            var html = http.GetHtml(item);
+            System.Diagnostics.Trace.WriteLine(html.Html);
+            var result = Newtonsoft.Json.JsonConvert.DeserializeObject<UnDrugInfo>(html.Html);
+            var primary = result.body.dataStores.undruginfo.rowSet.primary;
+            WriteUnDrugInfo(primary);
+            recordCount = result.body.dataStores.undruginfo.recordCount;
+            int pageCount = recordCount / pageSize;
+            if (recordCount % pageSize != 0)
+            {
+                pageCount += 1;
+            }
+            pageNumber = result.body.dataStores.undruginfo.pageNumber + 1;
+
+            while (pageNumber <= pageCount)
+            {
+                System.Diagnostics.Trace.WriteLine("number:" + pageNumber + " count:" + recordCount);
+                GetUnDrugInfo(ref pageNumber, pageSize, recordCount, areaCode);
+
+            }
+
+        }
+        /// <summary>
+        /// 写诊疗目录数据
+        /// </summary>
+        private void WriteUnDrugInfo(undrug.Primary[] primary)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var record in primary)
+            {
+
+                sb.Append("insert into undruginfo values(");
+                sb.Append("'").Append(record.SI_UNDRUGINFO_AREACODE).Append("',");
+                sb.Append("'").Append(record.SI_UNDRUGINFO_ITEMCODE).Append("',");
+                sb.Append("'").Append(record.SI_UNDRUGINFO_ITEMNAME).Append("',");
+                sb.Append("'").Append(record.SI_UNDRUGINFO_FEEGRADE).Append("',");
+                sb.Append("'").Append(record.SI_UNDRUGINFO_TOPSALEPRICE).Append("',");
+                sb.Append("'").Append(record.SI_UNDRUGINFO_INVOCODE).Append("',");
+                sb.Append("'").Append(record.SI_UNDRUGINFO_PAYRATE).Append("',");
+                sb.Append("'").Append(GetTime(record.SI_UNDRUGINFO_STARTDATE).ToString("yyyy-MM-dd")).Append("',");
+                sb.Append("'").Append(GetTime(record.SI_UNDRUGINFO_ENDDATE).ToString("yyyy-MM-dd")).Append("',");
+                sb.Append("'").Append(record.SI_UNDRUGINFO_HOSGRADE).Append("',");
+                sb.Append("'").Append(record.SI_UNDRUGINFO_REMARK).Append("'");
+                sb.Append(");\r\n");
+            }
+            System.Diagnostics.Trace.WriteLine(sb.ToString());
+            File.AppendAllText("result\\疹疗目录数据.txt", sb.ToString());
+        }
+        #endregion 获取诊疗目录数据
+        #region 获取病种目录数据
+        /// <summary>
+        /// 获取病种目录数据
+        /// </summary>
+        private void GetDisease()
+        {
+            File.Delete("result//病种目录数据.txt");
+            //var r = frameDrugInfo.InvokeScript("zyGetDrugData");
+
+            List<string> areas = new List<string> { "371100", "371101", "371102", "371103", "371104", "371121", "371122", "371151" };
+            foreach (var item in areas)
+            {
+                int pageNumber = 1;
+                GetDiseaseInfo(ref pageNumber, 300, 0, item);
+            }
+
+        }
+        private void GetDiseaseInfo(ref int pageNumber, int pageSize, int recordCount, string areaCode)
+        {
+            HttpHelper http = new HttpHelper();
+
+            string data = "{ header:{ \"code\":0,\"message\":{ \"title\":\"\",\"detail\":\"\"}" +
+            " },body: { dataStores: { \"si_disease\":{ rowSet: { \"primary\":[],\"filter\":[],\"delete\":[] " +
+            " },name:\"si_disease\",pageNumber: " + pageNumber + ", pageSize: " + pageSize + ",recordCount: " + recordCount + ",rowSetName:\"ncm.si.SI_DISEASE\"," +
+            " conditionValues:[[\"03\",12],[\"" + areaCode + "\",12]],parameters:[[\"03\",12],[\"" + areaCode + "\",12]]," +
+            " condition:\" PAYKINDCODE = ?  and AREACODE = ? \"}," +
+            "\"invosubject\":{rowSet:{\"primary\":[],\"filter\":[],\"delete\":[]},name:\"invosubject\"," +
+            "pageNumber:1,pageSize:2147483647,recordCount:0,rowSetName:\"ncm.si.SI_INVOSUBJECT\"," +
+            "conditionValues:[[\"03\",12],[\"" + areaCode + "\",12]],parameters:[[\"03\",12],[\"" + areaCode + "\",12]],"
+            + "condition:\" PAYKINDCODE = ?  and AREACODE = ? \"}},parameters:{}}}";
+            HttpItem item = new HttpItem();
+            item.URL = "http://10.66.1.6:8088/EAPDomain/SiBusinessDelegateAction.do?method=submit&BUSINESS_REQUEST_ID=REQ-ZA-M-001-00&MENUID=1280910172796&BUSINESS_ID=";
+            item.Method = "post";
+            item.Postdata = data;
+            item.Encoding = Encoding.GetEncoding("UTF-8");
+            item.Cookie = this.wb.Document.Cookie;
+            item.ContentType = "multipart/form-data";
+            item.Header.Add("x-requested-with", "XMLHttpRequest");
+            item.Header.Add("ajaxrequest", "true");
+            item.Header.Add("Pragma", "no-cache");
+            item.Referer = "http://10.66.1.6:8088/EAPDomain/si/pages/ncm/druginfo/si_druginfo.jsp?menuid=1280910172796";
+            var html = http.GetHtml(item);
+            System.Diagnostics.Trace.WriteLine(html.Html);
+            var result = Newtonsoft.Json.JsonConvert.DeserializeObject<diseaseInfo>(html.Html);
+            var primary = result.body.dataStores.si_disease.rowSet.primary;
+            WriteDiseaseInfo(primary);
+            recordCount = result.body.dataStores.si_disease.recordCount;
+            int pageCount = recordCount / pageSize;
+            if (recordCount % pageSize != 0)
+            {
+                pageCount += 1;
+            }
+            pageNumber = result.body.dataStores.si_disease.pageNumber + 1;
+
+            while (pageNumber <= pageCount)
+            {
+                System.Diagnostics.Trace.WriteLine("number:" + pageNumber + " count:" + recordCount);
+                GetDiseaseInfo(ref pageNumber, pageSize, recordCount, areaCode);
+
+            }
+
+        }
+        /// <summary>
+        /// 写获病种目录数据
+        /// </summary>
+        private void WriteDiseaseInfo(disease.Primary[] primary)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var record in primary)
+            {
+
+                sb.Append("insert into disease values(");
+                sb.Append("'").Append(record.AREACODE).Append("',");
+                sb.Append("'").Append(record.ICDCODE).Append("',");
+                sb.Append("'").Append(record.ICDNAME).Append("',");
+                sb.Append("'").Append(record.DISEASETYPE).Append("',");
+                sb.Append("'").Append(record.DISEASESORT).Append("',");
+                sb.Append("'").Append(record.VALIDATEFLAG).Append("',");
+                sb.Append("'").Append(record.REMARK).Append("'");
+             
+                sb.Append(");\r\n");
+            }
+            System.Diagnostics.Trace.WriteLine(sb.ToString());
+            File.AppendAllText("result\\病种目录数据.txt", sb.ToString());
+        }
+        #endregion 获取病种目录数据
+
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            //frameDrugInfo.GetElementById("unieap_grid_view_toolbar_0").Children[0].Children[0].Children[0].Children[0].GetElementsByTagName("td")[4].FirstChild.InvokeMember("click");
+
+            //var r = frameDrugInfo.InvokeScript("zyWriteDrugData");
+
+            //getDrugInfo();
+        }
+        public static DateTime GetTime(string timeStamp)
+        {
+            return TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1)).AddMilliseconds(long.Parse(timeStamp));
+        }
+      
+       
     }
 }
 
