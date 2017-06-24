@@ -1,10 +1,12 @@
-﻿using Microsoft.Win32;
+﻿using FillTheForm.drug;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -54,9 +56,9 @@ namespace FillTheForm
 
         private void wb_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            System.Diagnostics.Trace.WriteLine("DocumentCompleted："+e.Url);
+            System.Diagnostics.Trace.WriteLine("DocumentCompleted：" + e.Url);
             //登陆界面处理　
-            if(e.Url.ToString().IndexOf("login.do")>-1)
+            if (e.Url.ToString().IndexOf("login.do") > -1)
             {
                 AutoLogin(this.wb.Document);
             }
@@ -75,9 +77,60 @@ namespace FillTheForm
             {
                 AutoFeePrice(this.wb.Document);
             }
+            //药品目录管理获取数据
+            if (e.Url.ToString().IndexOf("si_druginfo.jsp") > -1)
+            {
+                AutoGetDrugInfo(this.wb.Document);
+            }
 
-            
 
+
+        }
+        private HtmlDocument frameDrugInfo;
+        /// <summary>
+        /// 获取药品目录数据，导入sql脚本到drug.txt
+        /// </summary>
+        /// <param name="doc"></param>
+        private void AutoGetDrugInfo(HtmlDocument doc)
+        {
+            var script = File.ReadAllText("script\\druginfo.js");
+            frameDrugInfo = this.wb.Document.Window.Frames["mianFrame"].Document.Window.Frames["middern"].Frames["frmMid"].Frames["page_1280910172796"].Document;
+            InstallScript(script, frameDrugInfo);
+
+        }
+        public void OnWriteDrugInfoSucess()
+        {
+            MessageBox.Show("导出药品成功");
+        }
+        public void Sleep(int millseconds)
+        {
+            System.Threading.Thread.Sleep(millseconds);
+        }
+        /// <summary>
+        /// 写入药品目录数据
+        /// </summary>
+        /// <param name="result"></param>
+        public void WriteDrugInfoFile(string result)
+        {
+            if (result == "") return;
+            string[] list = result.Split('$');
+            StringBuilder sb = new StringBuilder();
+            foreach (var record in list)
+            {
+                if (record.Length > 5)
+                {
+                    sb.Append("insert into druginfo values(");
+                    string[] items = record.Split(',');
+                    foreach (string item in items)
+                    {
+                        sb.Append("'").Append(item).Append("',");
+                    }
+                    sb.Remove(sb.Length - 1, 1);
+                    sb.Append(");\r\n");
+                }
+            }
+            System.Diagnostics.Trace.WriteLine(sb.ToString());
+            File.AppendAllText("result\\druginfo.txt", sb.ToString());
         }
         /// <summary>
         /// 验证页处理　登陆失败用，根据测试，进此方法，则登陆失败
@@ -85,8 +138,8 @@ namespace FillTheForm
         /// <param name="doc"></param>
         private void AutoCheckDo(HtmlDocument doc)
         {
-                AfterLoginError();
-            
+            AfterLoginError();
+
         }
         /// <summary>
         /// 首页界面处理
@@ -100,7 +153,7 @@ namespace FillTheForm
                                  },2000);
                               
                                }
-                            //window.alert=function(){};
+                            window.alert=function(){};
 
 ";
             InstallScript(script);
@@ -228,17 +281,17 @@ namespace FillTheForm
         　　　}
 ";
             InstallScript(script);
-            var r = this.wb.Document.InvokeScript("zyLogin", new object[] { this.txtUserName.Text.Trim(), this.txtPassWord.Text.Trim(),FeePriceUrl });
-            
+            var r = this.wb.Document.InvokeScript("zyLogin", new object[] { this.txtUserName.Text.Trim(), this.txtPassWord.Text.Trim(), FeePriceUrl });
+
 
         }
         //添加脚本
-        private void InstallScript(string code,HtmlDocument frameDoc = null)
+        private void InstallScript(string code, HtmlDocument frameDoc = null)
         {
 
-            if (null == this.wb.Document || ( string.IsNullOrEmpty(code)))
+            if (null == this.wb.Document || (string.IsNullOrEmpty(code)))
                 return;
-            
+
             HtmlElement scriptElement = null;
             HtmlElementCollection elements = null;
             if (null == scriptElement)
@@ -247,13 +300,13 @@ namespace FillTheForm
                 {
                     scriptElement = this.wb.Document.CreateElement("script");
                     elements = this.wb.Document.GetElementsByTagName("head");
-                    
+
                 }
                 else
                 {
                     scriptElement = frameDoc.CreateElement("script");
                     elements = frameDoc.GetElementsByTagName("head");
-                    
+
                 }
                 if (elements.Count > 0)
                     elements[0].AppendChild(scriptElement);
@@ -267,7 +320,7 @@ namespace FillTheForm
             scriptElement.SetAttribute("type", "text/javascript");
             scriptElement.SetAttribute("language", "javascript");
             scriptElement.SetAttribute("text", code);
-          
+
 
         }
         private void timer1_Tick(object sender, EventArgs e)
@@ -317,7 +370,7 @@ namespace FillTheForm
             //e.Cancel = false;
             //WebBrowser wb = (WebBrowser)sender;//把sender给拿下，是一个WebBrowser对象
             //wb.Navigate(FeePriceUrl);
-            
+
 
         }
 
@@ -325,7 +378,7 @@ namespace FillTheForm
         {
             string url = e.Url.ToString();
             //System.Diagnostics.Trace.WriteLine(url);
-           
+
         }
 
         private void FillFormDemo_Load(object sender, EventArgs e)
@@ -349,10 +402,6 @@ namespace FillTheForm
             //InstallScript("window.alert = function () { }");
         }
 
-        private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
 
         private void button2_Click_1(object sender, EventArgs e)
         {
@@ -366,10 +415,120 @@ namespace FillTheForm
         /// </summary>
         public void AfterLoginError()
         {
-            
+
             MessageBox.Show("用户名或密码不正确！请重新输入用户名与密码！");
             this.txtUserName.Focus();
             this.button1.Enabled = true;
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            File.Delete("result//druginfo.txt");
+            //var r = frameDrugInfo.InvokeScript("zyGetDrugData");
+            
+            List<string> areas = new List<string> { "371100", "371101", "371102", "371103", "371104", "371121", "371122", "371151" };
+            foreach (var item in areas)
+            {
+                int pageNumber = 1;
+                getDrugInfo(ref pageNumber, 300, 0,item);
+            }
+            
+            sw.Stop();
+            MessageBox.Show("药品获取成功！耗时：" + sw.ElapsedMilliseconds);
+
+        }
+
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            //frameDrugInfo.GetElementById("unieap_grid_view_toolbar_0").Children[0].Children[0].Children[0].Children[0].GetElementsByTagName("td")[4].FirstChild.InvokeMember("click");
+
+            //var r = frameDrugInfo.InvokeScript("zyWriteDrugData");
+
+            //getDrugInfo();
+        }
+        public static DateTime GetTime(string timeStamp)
+        {
+            return TimeZone.CurrentTimeZone.ToLocalTime(new System.DateTime(1970, 1, 1)).AddMilliseconds(long.Parse(timeStamp));
+        }
+        private void getDrugInfo(ref int pageNumber, int pageSize, int recordCount, string areaCode)
+        {
+            HttpHelper http = new HttpHelper();
+
+            string data = "{ header:{ \"code\":0,\"message\":{ \"title\":\"\",\"detail\":\"\"}" +
+            " },body: { dataStores: { \"druginfo\":{ rowSet: { \"primary\":[],\"filter\":[],\"delete\":[] " +
+            " },name:\"druginfo\",pageNumber: " + pageNumber + ", pageSize: " + pageSize + ",recordCount: " + recordCount + ",rowSetName:\"ncm.si.SI_DRUGINFO\"," +
+            " conditionValues:[[\"03\",12],[\"" + areaCode + "\",12]],parameters:[[\"03\",12],[\"" + areaCode + "\",12]]," +
+            " condition:\" PAYKINDCODE = ?  and AREACODE = ? \"}," +
+            "\"invosubject\":{rowSet:{\"primary\":[],\"filter\":[],\"delete\":[]},name:\"invosubject\"," +
+            "pageNumber:1,pageSize:2147483647,recordCount:0,rowSetName:\"ncm.si.SI_INVOSUBJECT\"," +
+            "conditionValues:[[\"03\",12],[\"" + areaCode + "\",12]],parameters:[[\"03\",12],[\"" + areaCode + "\",12]],"
+            + "condition:\" PAYKINDCODE = ?  and AREACODE = ? \"}},parameters:{}}}";
+            HttpItem item = new HttpItem();
+            item.URL = "http://10.66.1.6:8088/EAPDomain/SiBusinessDelegateAction.do?method=submit&BUSINESS_REQUEST_ID=REQ-ZA-M-001-00&MENUID=1280910172796&BUSINESS_ID=";
+            item.Method = "post";
+            item.Postdata = data;
+            item.Encoding = Encoding.GetEncoding("UTF-8");
+            item.Cookie = this.wb.Document.Cookie;
+            item.ContentType = "multipart/form-data";
+            item.Header.Add("x-requested-with", "XMLHttpRequest");
+            item.Header.Add("ajaxrequest", "true");
+            item.Header.Add("Pragma", "no-cache");
+            item.Referer = "http://10.66.1.6:8088/EAPDomain/si/pages/ncm/druginfo/si_druginfo.jsp?menuid=1280910172796";
+            var html = http.GetHtml(item);
+            System.Diagnostics.Trace.WriteLine(html.Html);
+            var result = Newtonsoft.Json.JsonConvert.DeserializeObject<DrugInfoResult>(html.Html);
+            var primary = result.body.dataStores.druginfo.rowSet.primary;
+            WriteDrugInfoFile2(primary);
+            recordCount = result.body.dataStores.druginfo.recordCount;
+            int pageCount = recordCount / pageSize;
+            if (recordCount % pageSize != 0)
+            {
+                pageCount += 1;
+            }
+            pageNumber = result.body.dataStores.druginfo.pageNumber + 1;
+
+            while (pageNumber <= pageCount)
+            {
+                System.Diagnostics.Trace.WriteLine("number:" + pageNumber + " count:" + recordCount);
+                getDrugInfo(ref pageNumber, pageSize, recordCount,areaCode);
+
+            }
+
+        }
+        /// <summary>
+        /// 写druginfo
+        /// </summary>
+        private void WriteDrugInfoFile2(drug.Primary[] primary)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var record in primary)
+            {
+
+                sb.Append("insert into druginfo values(");
+                sb.Append("'").Append(record.SI_DRUGINFO_AREACODE).Append("',");
+                sb.Append("'").Append(record.SI_DRUGINFO_DRUGCODE).Append("',");
+                sb.Append("'").Append(record.SI_DRUGINFO_REGULARNAME).Append("',");
+                sb.Append("'").Append(record.SI_DRUGINFO_SPECS).Append("',");
+                sb.Append("'").Append(record.SI_DRUGINFO_DOSEMODELCODE).Append("',");
+                sb.Append("'").Append(record.SI_DRUGINFO_FEEGRADE).Append("',");
+                sb.Append("'").Append(record.SI_DRUGINFO_TOPSALEPRICE).Append("',");
+                sb.Append("'").Append(record.SI_DRUGINFO_INVOCODE).Append("',");
+                sb.Append("'").Append(record.SI_DRUGINFO_PAYRATE).Append("',");
+                sb.Append("'").Append(record.SI_DRUGINFO_PACKUNIT).Append("',");
+                sb.Append("'").Append(record.SI_DRUGINFO_APPROVENO).Append("',");
+                sb.Append("'").Append(record.SI_DRUGINFO_LIMITDAYS).Append("',");
+                sb.Append("'").Append(GetTime(record.SI_DRUGINFO_STARTDATE).ToString("yyyy-MM-dd")).Append("',");
+                sb.Append("'").Append(GetTime(record.SI_DRUGINFO_ENDDATE).ToString("yyyy-MM-dd")).Append("',");
+                sb.Append("'").Append(record.SI_DRUGINFO_REMARK).Append("'");
+                sb.Append(");\r\n");
+            }
+            System.Diagnostics.Trace.WriteLine(sb.ToString());
+            File.AppendAllText("result\\druginfo.txt", sb.ToString());
+        }
     }
 }
+

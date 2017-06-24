@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DrugInfoResult.cs" />
     <Compile Include="dsFeeDetail.cs" />
     <Compile Include="FeePriceInfo.cs" />
     <Compile Include="FillFormDemo.cs">
@@ -55,6 +56,7 @@
     <Compile Include="FillFormDemo.Designer.cs">
       <DependentUpon>FillFormDemo.cs</DependentUpon>
     </Compile>
+    <Compile Include="HttpHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
@@ -75,6 +77,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="DllRef\Newtonsoft.Json.dll" />
+    <Content Include="result\说明.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="script\druginfo.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
