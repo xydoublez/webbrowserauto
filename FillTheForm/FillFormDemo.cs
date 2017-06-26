@@ -1,5 +1,8 @@
-﻿using FillTheForm.disease;
+﻿using FillTheForm.compare;
+using FillTheForm.disease;
 using FillTheForm.drug;
+using FillTheForm.dsdrug;
+using FillTheForm.dsundrug;
 using FillTheForm.undrug;
 using Microsoft.Win32;
 using System;
@@ -73,6 +76,7 @@ namespace FillTheForm
             if (e.Url.ToString().IndexOf("index.jsp") > -1)
             {
                 btnGetData.Enabled = true;
+                btnGetData1.Enabled = true;
                 AutoIndex(this.wb.Document);
             }
             //门诊医生开方界面
@@ -707,14 +711,262 @@ namespace FillTheForm
         }
         #endregion 获取病种目录数据
 
+        #region 获取财务药品字典
+        /// <summary>
+        /// 获取财务药品字典
+        /// </summary>
+        private void GetDsDrugInfo()
+        {
+            File.Delete("result//财务药品字典.txt");
+         
+            int pageNumber = 1;
+            GetDsDrugInfo(ref pageNumber, 22, 0, "");
+             
+
+        }
+        private void GetDsDrugInfo(ref int pageNumber, int pageSize, int recordCount, string areaCode)
+        {
+            HttpHelper http = new HttpHelper();
+
+            string data = "{header:{\"code\":0,\"message\":{\"title\":\"\",\"detail\":\"\"}},"
+                + "body:{dataStores:{\"dsDrugInfo\":{rowSet:{\"primary\":[],\"filter\":[],\"delete\":[]},name:\"dsDrugInfo\","
+                +"pageNumber:"+pageNumber+",pageSize:"+pageSize+",recordCount:"+recordCount+",rowSetName:\"ncm.pha.PHA_DRUGINFO\","
+                +"conditionValues:[[\"51049064\",12]],parameters:[[\"51049064\",12]],condition:\"[PHA_DRUGINFO_ORGCODE] = ? order by DRUGCODE desc \"}},parameters:{}}}";
+            HttpItem item = new HttpItem();
+            item.URL = "http://10.66.1.6:8088/EAPDomain/SiBusinessDelegateAction.do?method=submit&BUSINESS_REQUEST_ID=REQ-ZA-M-001-00&MENUID=1280911713328&BUSINESS_ID=";
+            item.Method = "post";
+            item.Postdata = data;
+            item.Encoding = Encoding.GetEncoding("UTF-8");
+            item.Cookie = this.wb.Document.Cookie;
+            item.ContentType = "multipart/form-data";
+            item.Header.Add("x-requested-with", "XMLHttpRequest");
+            item.Header.Add("ajaxrequest", "true");
+            item.Header.Add("Pragma", "no-cache");
+            item.Referer = "http://10.66.1.6:8088/EAPDomain/si/pages/pha/druginfo/druginfo.jsp?menuid=1280911713328";
+            var html = http.GetHtml(item);
+            System.Diagnostics.Trace.WriteLine(html.Html);
+            var result = Newtonsoft.Json.JsonConvert.DeserializeObject<dsDrugInfo>(html.Html);
+            var primary = result.body.dataStores.dsDrugInfo.rowSet.primary;
+            WriteDsDrugInfo(primary);
+            recordCount = result.body.dataStores.dsDrugInfo.recordCount;
+            int pageCount = recordCount / pageSize;
+            if (recordCount % pageSize != 0)
+            {
+                pageCount += 1;
+            }
+            pageNumber = result.body.dataStores.dsDrugInfo.pageNumber + 1;
+
+            while (pageNumber <= pageCount)
+            {
+                System.Diagnostics.Trace.WriteLine("number:" + pageNumber + " count:" + recordCount);
+                GetDsDrugInfo(ref pageNumber, pageSize, recordCount, areaCode);
+
+            }
+
+        }
+        /// <summary>
+        /// 写财务药品字典
+        /// </summary>
+        private void WriteDsDrugInfo(dsdrug.Primary[] primary)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var record in primary)
+            {
+
+                sb.Append("insert into dsDrugInfo values(");
+                sb.Append("'").Append(record.PHA_DRUGINFO_DRUGCODE).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_DRUGTYPE).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_TRADENAME).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_SPELLCODE).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_WBCODE).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_REGULARNAME).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_RSPELLCODE).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_RWBCODE).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_DOSEMODELCODE).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_BASEDOSE).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_DOSEUNIT).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_MINUNIT).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_PACKQTY).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_PACKUNIT).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_SPECS).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_SALEPRICE).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_WSPRICE).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_TOPSALEPRICE).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_CLINICSENDUNIT).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_HOSSENDUNIT).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_FEECODE).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_OUTINVOCODE).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_ININVOCODE).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_ISZERORATE).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_DRUGQUALITY).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_ISVALID).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_PRODUCINGAREA).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_FACID).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_APPROVEINFO).Append("',");
+                sb.Append("'").Append(record.PHA_DRUGINFO_REMARK).Append("',");
+                var comparePrimary = GetDrugCompareInfo(record.PHA_DRUGINFO_DRUGID).body.dataStores.dsItemCompare.rowSet.primary;
+                if (comparePrimary.Length > 0)
+                {
+                    sb.Append("'").Append(comparePrimary[0].FIN_ITEM_COMPARE_ITEMCODE).Append("',");
+                    sb.Append("'").Append(comparePrimary[0].FIN_ITEM_COMPARE_ITEMNAME).Append("'");
+                }
+                else
+                {
+                    sb.Append("' ',");
+                    sb.Append("' '");
+                }
+                sb.Append(");\r\n");
+            }
+            System.Diagnostics.Trace.WriteLine(sb.ToString());
+            File.AppendAllText("result\\财务药品字典.txt", sb.ToString());
+        }
+        private dsItemCompare GetDrugCompareInfo(string drugId)
+        {
+            HttpHelper http = new HttpHelper();
+            string data = "{header:{\"code\":0,\"message\":{\"title\":\"\",\"detail\":\"\"}},body:{dataStores:{\"dsItemCompare\":{rowSet:{\"primary\":[],\"filter\":[],\"delete\":[]},name:\"dsItemCompare\",pageNumber:1,pageSize:-1,recordCount:0,rowSetName:\"ncm.fin.FIN_ITEM_COMPARE\",conditionValues:[[\""+ drugId + "\",12],[\"51049064\",12]],parameters:[[\""+ drugId + "\",12],[\"51049064\",12]],condition:\"ITEMID =? and ORGCODE =? \"}},parameters:{}}}";
+            HttpItem item = new HttpItem();
+            item.URL = "http://10.66.1.6:8088/EAPDomain/SiBusinessDelegateAction.do?method=submit&BUSINESS_REQUEST_ID=REQ-ZA-M-001-00&MENUID=1280911713328&BUSINESS_ID=";
+            item.Method = "post";
+            item.Postdata = data;
+            item.Encoding = Encoding.GetEncoding("UTF-8");
+            item.Cookie = this.wb.Document.Cookie;
+            item.ContentType = "multipart/form-data";
+            item.Header.Add("x-requested-with", "XMLHttpRequest");
+            item.Header.Add("ajaxrequest", "true");
+            item.Header.Add("Pragma", "no-cache");
+            item.Referer = "http://10.66.1.6:8088/EAPDomain/si/pages/pha/druginfo/druginfo.jsp?menuid=1280911713328";
+            var html = http.GetHtml(item);
+            System.Diagnostics.Trace.WriteLine(html.Html);
+            var result = Newtonsoft.Json.JsonConvert.DeserializeObject<dsItemCompare>(html.Html);
+            return result;
+        }
+        #endregion 获取财务药品字典
+
+        #region 获取财务收费项目字典
+        /// <summary>
+        /// 获取财务药品字典
+        /// </summary>
+        private void GetDsUnDrugInfo()
+        {
+            File.Delete("result//财务收费项目字典.txt");
+          
+            int pageNumber = 1;
+            GetDsUnDrugInfo(ref pageNumber, 22, 0, "");
+
+        }
+        private void GetDsUnDrugInfo(ref int pageNumber, int pageSize, int recordCount, string areaCode)
+        {
+            HttpHelper http = new HttpHelper();
+
+            string data = "{header:{\"code\":0,\"message\":{\"title\":\"\",\"detail\":\"\"}},body:{dataStores:{\"dsundruginfo\":" 
+                + "{rowSet:{\"primary\":[],\"filter\":[],\"delete\":[]},name:\"dsundruginfo\"," 
+                + "pageNumber:"+pageNumber+",pageSize:"+ pageSize +",recordCount:"+ recordCount +",rowSetName:\"ncm.fin.FIN_UNDRUGINFO\",order:\"FIN_UNDRUGINFO_ITEMCODE ASC\",conditionValues:[[\"51049064\",12]],parameters:[[\"51049064\",12]],condition:\"[FIN_UNDRUGINFO_ORGCODE] = ? \"}},parameters:{}}}";
+            HttpItem item = new HttpItem();
+            item.URL = "http://10.66.1.6:8088/EAPDomain/SiBusinessDelegateAction.do?method=submit&BUSINESS_REQUEST_ID=REQ-ZA-M-001-00&MENUID=1280911554671&BUSINESS_ID=";
+            item.Method = "post";
+            item.Postdata = data;
+            item.Encoding = Encoding.GetEncoding("UTF-8");
+            item.Cookie = this.wb.Document.Cookie;
+            item.ContentType = "multipart/form-data";
+            item.Header.Add("x-requested-with", "XMLHttpRequest");
+            item.Header.Add("ajaxrequest", "true");
+            item.Header.Add("Pragma", "no-cache");
+            item.Referer = "http://10.66.1.6:8088/EAPDomain/si/pages/fin/undruginfo/undruginfo.jsp?menuid=1280911554671";
+            var html = http.GetHtml(item);
+            System.Diagnostics.Trace.WriteLine(html.Html);
+            var result = Newtonsoft.Json.JsonConvert.DeserializeObject<dsundruginfo>(html.Html);
+            var primary = result.body.dataStores.dsundruginfo.rowSet.primary;
+            WriteDsUnDrugInfo(primary);
+            recordCount = result.body.dataStores.dsundruginfo.recordCount;
+            int pageCount = recordCount / pageSize;
+            if (recordCount % pageSize != 0)
+            {
+                pageCount += 1;
+            }
+            pageNumber = result.body.dataStores.dsundruginfo.pageNumber + 1;
+
+            while (pageNumber <= pageCount)
+            {
+                System.Diagnostics.Trace.WriteLine("number:" + pageNumber + " count:" + recordCount);
+                GetDsUnDrugInfo(ref pageNumber, pageSize, recordCount, areaCode);
+
+            }
+
+        }
+        /// <summary>
+        /// 写财务收费项目字典
+        /// </summary>
+        private void WriteDsUnDrugInfo(dsundrug.Primary[] primary)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var record in primary)
+            {
+
+                sb.Append("insert into dsundrug values(");
+                sb.Append("'").Append(record.FIN_UNDRUGINFO_ITEMCODE).Append("',");
+                sb.Append("'").Append(record.FIN_UNDRUGINFO_ITEMNAME).Append("',");
+                sb.Append("'").Append(record.FIN_UNDRUGINFO_SPECS).Append("',");
+                sb.Append("'").Append(record.FIN_UNDRUGINFO_SPELLCODE).Append("',");
+                sb.Append("'").Append(record.FIN_UNDRUGINFO_WBCODE).Append("',");
+                sb.Append("'").Append(record.FIN_UNDRUGINFO_STOCKUNIT).Append("',");
+                sb.Append("'").Append(record.FIN_UNDRUGINFO_UNITPRICE).Append("',");
+                sb.Append("'").Append(record.FIN_UNDRUGINFO_FEECODE).Append("',");
+                sb.Append("'").Append(record.FIN_UNDRUGINFO_OUTINVOCODE).Append("',");
+                sb.Append("'").Append(record.FIN_UNDRUGINFO_ININVOCODE).Append("',");
+                sb.Append("'").Append(record.FIN_UNDRUGINFO_ITEMSTATUS).Append("',");
+                sb.Append("'").Append(record.FIN_UNDRUGINFO_EXEDEPTCODE).Append("',");
+                var comparePrimary = GetUnDrugCompareInfo(record.FIN_UNDRUGINFO_ITEMID).body.dataStores.dsItemCompare.rowSet.primary;
+                if (comparePrimary.Length > 0)
+                {
+                    sb.Append("'").Append(comparePrimary[0].FIN_ITEM_COMPARE_ITEMCODE).Append("',");
+                    sb.Append("'").Append(comparePrimary[0].FIN_ITEM_COMPARE_ITEMNAME).Append("'");
+                }
+                else
+                {
+                    sb.Append("' ',");
+                    sb.Append("' '");
+                }
+                sb.Append(");\r\n");
+            }
+            System.Diagnostics.Trace.WriteLine(sb.ToString());
+            File.AppendAllText("result\\财务收费项目字典.txt", sb.ToString());
+        }
+        private dsItemCompare GetUnDrugCompareInfo(string itemId)
+        {
+            HttpHelper http = new HttpHelper();
+            string data = "{header:{\"code\":0,\"message\":{\"title\":\"\",\"detail\":\"\"}}," 
+                +  "body:{dataStores:{\"dsitemcompare\":{rowSet:{\"primary\":[],\"filter\":[],\"delete\":[]}," 
+                + "name:\"dsitemcompare\",pageNumber:1,pageSize:-1,recordCount:0,rowSetName:\"ncm.fin.FIN_ITEM_COMPARE\"," 
+                + "conditionValues:[[\""+itemId+"\",12]],parameters:[[\""+itemId+"\",12]],condition:\"ITEMID =? and ORGCODE = '51049064'\"}},parameters:{}}}";
+            HttpItem item = new HttpItem();
+            item.URL = "http://10.66.1.6:8088/EAPDomain/SiBusinessDelegateAction.do?method=submit&BUSINESS_REQUEST_ID=REQ-ZA-M-001-00&MENUID=1280911554671&BUSINESS_ID=";
+            item.Method = "post";
+            item.Postdata = data;
+            item.Encoding = Encoding.GetEncoding("UTF-8");
+            item.Cookie = this.wb.Document.Cookie;
+            item.ContentType = "multipart/form-data";
+            item.Header.Add("x-requested-with", "XMLHttpRequest");
+            item.Header.Add("ajaxrequest", "true");
+            item.Header.Add("Pragma", "no-cache");
+            item.Referer = "http://10.66.1.6:8088/EAPDomain/si/pages/fin/undruginfo/undruginfo.jsp?menuid=1280911554671";
+            var html = http.GetHtml(item);
+            System.Diagnostics.Trace.WriteLine(html.Html);
+            var result = Newtonsoft.Json.JsonConvert.DeserializeObject<dsItemCompare>(html.Html);
+            return result;
+        }
+        #endregion 获取财务收费项目字典
+
 
         private void button4_Click(object sender, EventArgs e)
         {
-            //frameDrugInfo.GetElementById("unieap_grid_view_toolbar_0").Children[0].Children[0].Children[0].Children[0].GetElementsByTagName("td")[4].FirstChild.InvokeMember("click");
-
-            //var r = frameDrugInfo.InvokeScript("zyWriteDrugData");
-
-            //getDrugInfo();
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            GetDsDrugInfo();
+            GetDsUnDrugInfo();
+            sw.Stop();
+            MessageBox.Show("耗时：" + sw.ElapsedMilliseconds + "毫秒");
         }
         public static DateTime GetTime(string timeStamp)
         {

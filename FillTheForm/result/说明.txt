@@ -8,3 +8,14 @@ create table undruginfo(
 统筹区 varchar(30),项目编码 varchar(30),项目名称 varchar(30), 等级 varchar(30),最高价格  varchar(30),发票科目 varchar(30),自付比例 varchar(30),开始日期 varchar(30),终止日期 varchar(30), 医院等级 varchar(30),备注 varchar(100))
 --病种目录数据
 create table disease( 统筹区 varchar(30),疾病编码 varchar(30),病种名称 varchar(30), 疾病分类 varchar(30), 病种类别 varchar(30), 有效标志 varchar(30),备注 varchar(100))
+--财务药品字典表(注意：对照项目编码　为　药品目录数据表中　药品编码)
+create table dsDrugInfo(药品编码 varchar(30),药品类别 varchar(30),商品名 varchar(30),拼音简码 varchar(30),五笔简码 varchar(30),通用名 varchar(30),
+通用名拼音简码 varchar(30),通用名五笔简码 varchar(30),剂型 varchar(30),基本剂量 varchar(30),剂量单位 varchar(30),最小单位 varchar(30),
+包装数量 varchar(30),包装单位 varchar(30),规格 varchar(30),价格信息零售价 varchar(30),批发价 varchar(30),
+国家限价 varchar(30),门诊单位 varchar(30),住院单位 varchar(30),核算科目 varchar(30),门诊发票 varchar(30),
+住院发票 varchar(30),零差率 varchar(30), 其他信息药品性质 varchar(30),状态 varchar(30),产地 varchar(30),
+生产厂家 varchar(30),批准文号 varchar(30),备注 varchar(100),对照项目编码 varchar(30),对照项目名称 varchar(30))
+
+--财务收费项目字典表(注意：对照项目编码　为获取诊疗目录数据　的项目编码)
+create table dsundruginfo(项目编码 varchar(30),项目名称 varchar(30) ,规格 varchar(30), 拼音简码 varchar(30),五笔简码  varchar(30) ,单位 varchar(30),  单价 varchar(30), 核算科目 varchar(30),门诊科目 varchar(30),  住院科目 varchar(30),  状态  varchar(30),执行科室   varchar(30),
+对照项目编码 varchar(30),对照项目名称 varchar(30))

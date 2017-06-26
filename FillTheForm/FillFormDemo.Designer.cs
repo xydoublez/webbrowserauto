@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.button4 = new System.Windows.Forms.Button();
+            this.btnGetData1 = new System.Windows.Forms.Button();
             this.btnGetData = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -53,7 +53,7 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.button4);
+            this.splitContainer1.Panel1.Controls.Add(this.btnGetData1);
             this.splitContainer1.Panel1.Controls.Add(this.btnGetData);
             this.splitContainer1.Panel1.Controls.Add(this.label2);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
@@ -69,24 +69,25 @@
             this.splitContainer1.SplitterDistance = 175;
             this.splitContainer1.TabIndex = 0;
             // 
-            // button4
+            // btnGetData1
             // 
-            this.button4.Location = new System.Drawing.Point(27, 339);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(101, 23);
-            this.button4.TabIndex = 7;
-            this.button4.Text = "test";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.btnGetData1.Enabled = false;
+            this.btnGetData1.Location = new System.Drawing.Point(12, 339);
+            this.btnGetData1.Name = "btnGetData1";
+            this.btnGetData1.Size = new System.Drawing.Size(145, 43);
+            this.btnGetData1.TabIndex = 7;
+            this.btnGetData1.Text = "获取财务管理数据";
+            this.btnGetData1.UseVisualStyleBackColor = true;
+            this.btnGetData1.Click += new System.EventHandler(this.button4_Click);
             // 
             // btnGetData
             // 
             this.btnGetData.Enabled = false;
-            this.btnGetData.Location = new System.Drawing.Point(27, 289);
+            this.btnGetData.Location = new System.Drawing.Point(12, 273);
             this.btnGetData.Name = "btnGetData";
-            this.btnGetData.Size = new System.Drawing.Size(101, 23);
+            this.btnGetData.Size = new System.Drawing.Size(145, 39);
             this.btnGetData.TabIndex = 6;
-            this.btnGetData.Text = "获取目录数据";
+            this.btnGetData.Text = "获取中心接口目录数据";
             this.btnGetData.UseVisualStyleBackColor = true;
             this.btnGetData.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -199,6 +200,6 @@
         private System.Windows.Forms.TextBox txtPassWord;
         private System.Windows.Forms.TextBox txtUserName;
         private System.Windows.Forms.Button btnGetData;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button btnGetData1;
     }
 }

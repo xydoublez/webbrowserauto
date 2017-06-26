@@ -49,7 +49,10 @@
   <ItemGroup>
     <Compile Include="diseaseInfo.cs" />
     <Compile Include="DrugInfoResult.cs" />
+    <Compile Include="dsDrugInfo.cs" />
     <Compile Include="dsFeeDetail.cs" />
+    <Compile Include="dsItemCompare.cs" />
+    <Compile Include="dsUnDrugInfo.cs" />
     <Compile Include="FeePriceInfo.cs" />
     <Compile Include="FillFormDemo.cs">
       <SubType>Form</SubType>
@@ -75,6 +78,7 @@
     <None Include="data.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="json1.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

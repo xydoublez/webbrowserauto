@@ -62,6 +62,7 @@ namespace FillTheForm.drug
 
     public class Metadata
     {
+
         public SI_DRUGINFO_DRUGID SI_DRUGINFO_DRUGID { get; set; }
         public SI_DRUGINFO_AREACODE SI_DRUGINFO_AREACODE { get; set; }
         public SI_DRUGINFO_PAYKINDCODE SI_DRUGINFO_PAYKINDCODE { get; set; }
